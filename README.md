@@ -201,80 +201,42 @@ aidlc-docs/
 - **コードとドキュメントの分離**: アプリケーションコードはワークスペースルート、ドキュメントは `aidlc-docs/` のみ
 - **チェックボックストラッキング**: 計画の各ステップ完了時に即座にチェックボックスを更新する
 
-```markdown
 # Vue 3 UIライブラリ比較（Kiro使用前提）
 
-## 基本情報
+Miro にそのまま貼りやすいよう、1つのTSV形式に統合しています。コードブロック内をそのままコピーして貼り付けてください。
 
-| 項目 | Bootstrap (bootstrap-vue-next) | Vuetify 3 | Element Plus |
-|------|------|------|------|
-| Vue 3 対応 | bootstrap-vue-nextで対応。旧bootstrap-vueはVue 2のみ | 正式対応 | Vue 3専用設計 |
-| ライセンス | MIT | MIT | MIT |
-
-## コンポーネント
-
-| 項目 | Bootstrap (bootstrap-vue-next) | Vuetify 3 | Element Plus |
-|------|------|------|------|
-| コンポーネント数 | 約40以上 | 約80以上 | 約70以上 |
-| データテーブル | 基本的なテーブル。ソート、ページネーション対応 | v-data-tableが高機能。仮想スクロール、サーバーサイド対応 | el-tableが高機能。固定列、ツリー構造、ソート対応 |
-| フォーム / バリデーション | 基本的なフォーム。バリデーションは外部ライブラリ依存 | 内蔵バリデーションルールあり | 内蔵バリデーション(async-validator)が充実 |
-
-## 開発体験
-
-| 項目 | Bootstrap (bootstrap-vue-next) | Vuetify 3 | Element Plus |
-|------|------|------|------|
-| TypeScript | 対応 | 完全対応。TypeScriptで実装されている | 完全対応。TypeScriptで実装されている |
-| ドキュメント充実度 | 発展途上 | 非常に充実 | 充実 |
-| 日本語ドキュメント | 公式なし | 公式なし。コミュニティ翻訳あり | 公式で日本語対応 |
-
-## デザイン
-
-| 項目 | Bootstrap (bootstrap-vue-next) | Vuetify 3 | Element Plus |
-|------|------|------|------|
-| デザインシステム | Bootstrap独自。実績豊富だがやや古典的 | Material Design 3準拠 | 独自デザインシステム。業務向けで落ち着いた印象 |
-| テーマカスタマイズ | SCSS変数でカスタマイズ | SASS + Blueprintによるきめ細かいカスタマイズ | SCSS変数 / CSS Variablesでカスタマイズ |
-| レスポンシブ | 最も得意。グリッドシステムが定番 | グリッド、ブレークポイント対応 | 基本対応だがBootstrap/Vuetifyほど手厚くない |
-
-## エコシステム
-
-| 項目 | Bootstrap (bootstrap-vue-next) | Vuetify 3 | Element Plus |
-|------|------|------|------|
-| GitHub Stars | Bootstrap本体 約170k / bootstrap-vue-next 約1k | 約40k | 約24k |
-| npm 週間ダウンロード数 | 約15k | 約500k | 約400k |
-| メンテナンス頻度 | コミュニティ主導。更新頻度にムラあり | 活発。Vuetify社が開発 | 活発。Elementチームが継続開発 |
-| サードパーティ連携 | Bootstrapエコシステムが豊富 | Material Design Icons等 | 独自エコシステム |
-
-## パフォーマンス
-
-| 項目 | Bootstrap (bootstrap-vue-next) | Vuetify 3 | Element Plus |
-|------|------|------|------|
-| Tree-shaking | 対応 | 対応 | 対応。unplugin-element-plusで自動インポート可 |
-| バンドルサイズ | 比較的軽量 | やや大きい | 中程度 |
-| SSR / Nuxt 3 | 限定的 | Nuxtモジュール公式対応 | Nuxt対応。nuxt-element-plus |
-
-## AI駆動開発（Kiro）との親和性
-
-| 項目 | Bootstrap (bootstrap-vue-next) | Vuetify 3 | Element Plus |
-|------|------|------|------|
-| LLM学習データ量 | Bootstrap本体は膨大だがbootstrap-vue-nextのデータは極めて少ない | 非常に多い。Vue UIライブラリとして最大の普及度 | 多い。中国語圏含めコード例が豊富 |
-| コード生成の正確性 | AIがVue 2版のコードを生成するリスクが高い | v-プレフィックスで統一された命名規則。AIが正しいpropsを推測しやすい | el-プレフィックスで統一。API設計が直感的 |
-| Spec to Code変換の親和性 | CSSユーティリティクラス中心のためSpecから宣言的UIへの変換がしにくい | 最も高い。宣言的APIでprops駆動のためSpecの記述と1対1で対応しやすい | 高い。宣言的API設計 |
-| ドキュメントの構造化度 | ドキュメントに未整備箇所あり | 各コンポーネントにAPI表、Playground、例が体系的に整理されている | APIリファレンスが構造的 |
-| 型定義の厳密さ | 一部不完全 | 非常に厳密。global component型も提供 | 厳密。TypeScriptで全コンポーネント定義 |
-| API安定性 | bootstrap-vueからbootstrap-vue-nextでAPIが大きく変更。AIが旧APIを生成する可能性が非常に高い | Vuetify 2から3で破壊的変更あり。Steeringでv3を明記すれば緩和可能 | Element UIからElement PlusでAPIの一貫性が比較的高い |
-| サンプルコードの豊富さ | 少ない | 最多。Stack Overflow、ブログ記事、公式例が豊富 | 豊富。中国語圏含めると膨大 |
-
-## 総合評価
-
-| 評価軸 | Bootstrap (bootstrap-vue-next) | Vuetify 3（Steering設定済） | Element Plus |
-|--------|------|------|------|
-| コンポーネント充実度 | やや不足 | 非常に充実 | 充実 |
-| デザイン品質 | 標準的 | 非常に高い | 標準的 |
-| ドキュメント | 不十分 | 非常に充実 | 充実 |
-| エコシステム / 安定性 | やや不安 | 非常に安定 | 安定 |
-| パフォーマンス | 軽量 | やや重い | 標準的 |
-| Kiro（AI生成）との親和性 | 低い | 高い | 高い |
-| 総合 | 非推奨 | 推奨 | 推奨 |
+```tsv
+カテゴリ	評価項目	Bootstrap (bootstrap-vue-next)	Vuetify 3	Element Plus
+基本情報	Vue 3 対応	bootstrap-vue-nextで対応。旧bootstrap-vueはVue 2のみ	正式対応	Vue 3専用設計
+基本情報	ライセンス	MIT	MIT	MIT
+コンポーネント	コンポーネント数	約40以上	約80以上	約70以上
+コンポーネント	データテーブル	基本的なテーブル。ソート、ページネーション対応	v-data-tableが高機能。仮想スクロール、サーバーサイド対応	el-tableが高機能。固定列、ツリー構造、ソート対応
+コンポーネント	フォーム / バリデーション	基本的なフォーム。バリデーションは外部ライブラリ依存	内蔵バリデーションルールあり	内蔵バリデーション(async-validator)が充実
+開発体験	TypeScript	対応	完全対応。TypeScriptで実装されている	完全対応。TypeScriptで実装されている
+開発体験	ドキュメント充実度	発展途上	非常に充実	充実
+開発体験	日本語ドキュメント	公式なし	公式なし。コミュニティ翻訳あり	公式で日本語対応
+デザイン	デザインシステム	Bootstrap独自。実績豊富だがやや古典的	Material Design 3準拠	独自デザインシステム。業務向けで落ち着いた印象
+デザイン	テーマカスタマイズ	SCSS変数でカスタマイズ	SASS + Blueprintによるきめ細かいカスタマイズ	SCSS変数 / CSS Variablesでカスタマイズ
+デザイン	レスポンシブ	最も得意。グリッドシステムが定番	グリッド、ブレークポイント対応	基本対応だがBootstrap/Vuetifyほど手厚くない
+エコシステム	GitHub Stars	Bootstrap本体 約170k / bootstrap-vue-next 約1k	約40k	約24k
+エコシステム	npm 週間ダウンロード数	約15k	約500k	約400k
+エコシステム	メンテナンス頻度	コミュニティ主導。更新頻度にムラあり	活発。Vuetify社が開発	活発。Elementチームが継続開発
+エコシステム	サードパーティ連携	Bootstrapエコシステムが豊富	Material Design Icons等	独自エコシステム
+パフォーマンス	Tree-shaking	対応	対応	対応。unplugin-element-plusで自動インポート可
+パフォーマンス	バンドルサイズ	比較的軽量	やや大きい	中程度
+パフォーマンス	SSR / Nuxt 3	限定的	Nuxtモジュール公式対応	Nuxt対応。nuxt-element-plus
+AI駆動開発（Kiro）との親和性	LLM学習データ量	Bootstrap本体は膨大だがbootstrap-vue-nextのデータは極めて少ない	非常に多い。Vue UIライブラリとして最大の普及度	多い。中国語圏含めコード例が豊富
+AI駆動開発（Kiro）との親和性	コード生成の正確性	AIがVue 2版のコードを生成するリスクが高い	v-プレフィックスで統一された命名規則。AIが正しいpropsを推測しやすい	el-プレフィックスで統一。API設計が直感的
+AI駆動開発（Kiro）との親和性	Spec to Code変換の親和性	CSSユーティリティクラス中心のためSpecから宣言的UIへの変換がしにくい	最も高い。宣言的APIでprops駆動のためSpecの記述と1対1で対応しやすい	高い。宣言的API設計
+AI駆動開発（Kiro）との親和性	ドキュメントの構造化度	ドキュメントに未整備箇所あり	各コンポーネントにAPI表、Playground、例が体系的に整理されている	APIリファレンスが構造的
+AI駆動開発（Kiro）との親和性	型定義の厳密さ	一部不完全	非常に厳密。global component型も提供	厳密。TypeScriptで全コンポーネント定義
+AI駆動開発（Kiro）との親和性	API安定性	bootstrap-vueからbootstrap-vue-nextでAPIが大きく変更。AIが旧APIを生成する可能性が非常に高い	Vuetify 2から3で破壊的変更あり。Steeringでv3を明記すれば緩和可能	Element UIからElement PlusでAPIの一貫性が比較的高い
+AI駆動開発（Kiro）との親和性	サンプルコードの豊富さ	少ない	最多。Stack Overflow、ブログ記事、公式例が豊富	豊富。中国語圏含めると膨大
+総合評価	コンポーネント充実度	やや不足	非常に充実	充実
+総合評価	デザイン品質	標準的	非常に高い	標準的
+総合評価	ドキュメント	不十分	非常に充実	充実
+総合評価	エコシステム / 安定性	やや不安	非常に安定	安定
+総合評価	パフォーマンス	軽量	やや重い	標準的
+総合評価	Kiro（AI生成）との親和性	低い	高い	高い
+総合評価	総合	非推奨	推奨	推奨
 ```
-
-このままMarkdownファイルにコピーしてGitHubのREADMEに貼り付けられます。必要に応じて内容の調整があればお知らせください。
