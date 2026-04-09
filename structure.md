@@ -1,54 +1,15 @@
 # Project Structure and Coding Guidelines
 
-## Purpose
+## 1. Purpose
 
 この `structure.md` は、このリポジトリで想定するフロントエンドとバックエンドの構造、およびコードスタイル／命名規則を定義します。
 
 想定スタック:
 
 - フロントエンド: Vue.js 3 + TypeScript
-- バックエンド: TypeScript
+- バックエンド: Hono + TypeScript(Lambda)
 
 ---
-
-## 1. 推奨ディレクトリ構成（ポリレポ）
-
-```
-frontend-repo/
-├── README.md
-├── package.json
-├── tsconfig.json
-├── public/
-├── src/
-│   ├── components/
-│   ├── composables/
-│   ├── views/
-│   ├── layouts/
-│   ├── router/
-│   ├── store/
-│   ├── assets/
-│   ├── styles/
-│   ├── types/
-│   └── tests/
-
-backend-repo/
-├── README.md
-├── package.json
-├── tsconfig.json
-├── src/
-│   ├── controllers/
-│   ├── services/
-│   ├── repositories/
-│   ├── routes/
-│   ├── middlewares/
-│   ├── models/
-│   ├── dtos/
-│   ├── utils/
-│   ├── types/
-│   └── tests/
-
-tests/
-```
 
 ### 1.1 役割
 
@@ -58,7 +19,7 @@ tests/
 
 ---
 
-## 1.2 DDD 優先の設計方針
+### 1.2 DDD 優先の設計方針
 
 - 各リポジトリはそれぞれ独立した境界コンテキストとして扱う
 - バックエンドでは「Domain / Application / Infrastructure / Interface」のレイヤーを意識し、ドメインモデルとユースケースを中心に設計する
@@ -103,12 +64,6 @@ tests/
   - 例: `auth.middleware.ts`
 - テスト: `xxx.spec.ts`
   - 例: `user.service.spec.ts`
-
-### 2.3 共有ファイル
-
-- 共有型: `xxx.types.ts`
-- Enum 定義: `xxx.enums.ts`
-- ユーティリティ: `xxx.ts`
 
 ---
 
@@ -196,37 +151,20 @@ tests/
 
 ---
 
-## 6. テスト規約
+## 6. 品質とドキュメント
 
-### 6.1 ファイル配置
-
-- フロントエンドユニットテスト: `src/frontend/tests/`
-- バックエンドユニットテスト: `src/backend/tests/`
-- テストファイル名: `xxx.spec.ts`
-
-### 6.2 テストスタイル
-
-- `describe()` / `it()` を使う
-- テストは小さな単位で書く
-- `setup` と `cleanup` を明示的に行う
-- モックは必要最小限にとどめ、振る舞いを明確にする
-
----
-
-## 7. 共通ルール
-
-### 7.1 コード品質
+### 6.1 コード品質
 
 - コードは一貫したフォーマットとスタイルで記述する
 - 静的解析や型チェックを活用して品質を保つ
 - CI で品質チェックを行うことを推奨する
 
-### 7.2 ドキュメント
+### 6.2 ドキュメント
 
-- 新しい機能追加時は `README.md` か `structure.md` に構造変更を追記する
-- API は必要に応じて `docs/` にサマリを残す
+- 新しい機能追加時は `xxxxxxxxxxxx` に構造変更を追記する
+- API は必要に応じて `xxxxxxxxxxxx` にサマリを残す
 
-### 7.3 一貫性
+### 6.3 一貫性
 
 - 一度決めた命名規則やファイル構造はプロジェクト全体で維持する
 - フロントとバックで共有する型は `src/shared/types/` にまとめる
@@ -234,22 +172,16 @@ tests/
 
 ---
 
-## 8. 追加の命名例
+## 7. 命名例
 
-### UI 要素の `data-testid`
-
-- `login-form-submit-button`
-- `user-list-search-input`
-- `profile-card-edit-button`
-
-### API クラス / 関数
+### 7.1 API クラス / 関数
 
 - `UserController`
 - `AuthService`
 - `UserRepository`
 - `createUserDto`
 
-### イベント / プロパティ
+### 7.2 イベント / プロパティ
 
 - `isLoading`
 - `userProfile`
@@ -258,11 +190,9 @@ tests/
 
 ---
 
-## 9. 生成ルールとの整合性
+## 8. 生成ルールとの整合性
 
 AI-DLC ルールファイルでは、UI 用の自動テスト属性について以下を推奨しています:
 
 - `data-testid` は `component-element-role` 形式
 - ID は動的に変わるものを避ける
-
-この `structure.md` は、Vue 3 + TypeScript フロントエンドと TypeScript バックエンドの実装構造および命名規則を具体化するための補完資料です。
