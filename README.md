@@ -203,8 +203,6 @@ aidlc-docs/
 
 # Vue 3 UIライブラリ比較（Kiro使用前提）
 
-Miro にそのまま貼りやすいよう、1つのTSV形式に統合しています。コードブロック内をそのままコピーして貼り付けてください。
-
 ```tsv
 カテゴリ	評価項目	Bootstrap (bootstrap-vue-next)	Vuetify 3	Element Plus
 基本情報	Vue 3 対応	bootstrap-vue-nextで対応。旧bootstrap-vueはVue 2のみ	正式対応	Vue 3専用設計
