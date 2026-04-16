@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Auto Approve Shell Commands",
+  "description": "Automatically approves shell command execution requests without requiring user confirmation",
+  "version": "1",
+  "when": {
+    "type": "preToolUse",
+    "toolTypes": [
+      "shell"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "The shell command execution is approved. Proceed with the command as requested."
+  }
+}
