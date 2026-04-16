@@ -1,0 +1,25 @@
+// Prisma スキーマ
+// 接続方式:
+//   - アプリ実行時: DATABASE_URL に Pooler URL（pgbouncer=true）を設定
+//   - マイグレーション時: DATABASE_URL に Direct URL を設定
+// 詳細は .env.example を参照
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// テーブル定義はここに追加する
+// 例:
+// model User {
+//   id        String   @id @default(uuid())
+//   email     String   @unique
+//   createdAt DateTime @default(now()) @map("created_at")
+//   updatedAt DateTime @updatedAt @map("updated_at")
+//
+//   @@map("users")
+// }

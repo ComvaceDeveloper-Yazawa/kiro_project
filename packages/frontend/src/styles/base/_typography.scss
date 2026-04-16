@@ -1,0 +1,54 @@
+// タイポグラフィ基本設定 — Apple スタイル
+@use "variables" as *;
+html {
+  font-family: $font-family-base;
+  text-rendering: optimizeLegibility;
+}
+
+// 見出しユーティリティクラス
+.t-hero {
+  font-size: $font-size-hero;
+  font-weight: $font-weight-bold;
+  letter-spacing: -0.03em;
+  line-height: $line-height-tight;
+  color: $color-primary;
+}
+
+.t-heading-1 {
+  font-size: $font-size-4xl;
+  font-weight: $font-weight-bold;
+  letter-spacing: -0.02em;
+  line-height: $line-height-tight;
+}
+
+.t-heading-2 {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-semibold;
+  letter-spacing: -0.015em;
+  line-height: $line-height-tight;
+}
+
+.t-heading-3 {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-semibold;
+  letter-spacing: -0.01em;
+}
+
+.t-body {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-loose;
+  color: $color-text-muted;
+}
+
+.t-caption {
+  font-size: $font-size-sm;
+  color: $color-text-muted;
+  line-height: $line-height-base;
+}
+
+.t-label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-secondary;
+}

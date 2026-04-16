@@ -1,0 +1,19 @@
+// グローバルスタイル エントリポイント
+// SMACSS 順序: Base → Layout → Module → State → Theme
+// 注意: _variables.scss は vite.config.ts の additionalData で全ファイルに自動 import される
+
+// Base
+@use "base/reset";
+@use "base/typography";
+
+// Layout
+@use "layout/grid";
+
+// Module
+@use "module/button";
+
+// State
+@use "state/states";
+
+// Theme
+@use "theme/apple";

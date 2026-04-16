@@ -1,0 +1,23 @@
+{
+  "name": "monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "scripts": {
+    "dev:backend": "pnpm --filter @monorepo/backend dev",
+    "dev:frontend": "pnpm --filter @monorepo/frontend dev",
+    "build": "pnpm --filter @monorepo/shared build && pnpm --filter @monorepo/backend build && pnpm --filter @monorepo/frontend build",
+    "test": "pnpm --filter @monorepo/shared test && pnpm --filter @monorepo/backend test && pnpm --filter @monorepo/frontend test",
+    "test:e2e": "pnpm --filter @monorepo/e2e test",
+    "lint": "pnpm --filter @monorepo/shared lint && pnpm --filter @monorepo/backend lint && pnpm --filter @monorepo/frontend lint",
+    "format": "pnpm --filter @monorepo/shared format && pnpm --filter @monorepo/backend format && pnpm --filter @monorepo/frontend format",
+    "db:migrate": "pnpm --filter @monorepo/backend db:migrate",
+    "db:generate": "pnpm --filter @monorepo/backend db:generate"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3"
+  }
+}

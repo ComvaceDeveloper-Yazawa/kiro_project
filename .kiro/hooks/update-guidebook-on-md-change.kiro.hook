@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Update GUIDEBOOK on Markdown Change",
+  "description": "新しいマークダウンファイルが作成または既存のマークダウンファイルが更新されたとき、GUIDEBOOK.mdを自動的に更新します。更新内容には、そのファイルが存在する理由、いつ使われるか、ファイルに書かれている内容の詳細説明が含まれます。",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "**/*.md"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A markdown file has been created or updated. You must update /Users/yazawa/Documents/work/kiro_project/GUIDEBOOK.md accordingly.\n\nSteps to follow:\n1. First, read the current state of GUIDEBOOK.md to understand its existing structure and content.\n2. Read the markdown file that was just created or modified to understand its content.\n3. Update GUIDEBOOK.md with an entry (or update the existing entry) for the changed file that includes:\n   - Why this file exists (its purpose)\n   - When it is used (the context or trigger for its use)\n   - A detailed explanation of the content written in the file\n4. Make sure the GUIDEBOOK remains well-organized and consistent with its current format.\n5. Do NOT overwrite unrelated entries — only add or update the entry for the changed file."
+  }
+}
