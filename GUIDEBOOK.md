@@ -1,3 +1,84 @@
+# GUIDEBOOK — このリポジトリの全ファイル解説
+
+このドキュメントは、リポジトリに存在するすべてのファイルが「何を定義しているか」「なぜ存在するのか」を学習目的で詳細に説明したガイドブックです。
+
+---
+
+## ファイル全体マップ
+
+```
+kiro_project/
+├── README.md
+├── GUIDEBOOK.md                                     # このファイル
+│
+├── .kiro/                                           # Kiro IDE の設定・ルール
+│   ├── steering/aws-aidlc-rules/
+│   │   └── core-workflow.md                        # AI への行動指示（ステアリング）
+│   └── aws-aidlc-rule-details/                     # 各ステージの詳細ルール
+│       ├── common/                                  # 全ステージ共通ルール（11ファイル）
+│       ├── inception/                               # INCEPTION フェーズのルール（7ファイル）
+│       ├── construction/                            # CONSTRUCTION フェーズのルール（6ファイル）
+│       ├── operations/                              # OPERATIONS フェーズのルール（1ファイル）
+│       └── extensions/security/baseline/           # セキュリティ拡張ルール（1ファイル）
+│
+├── packages/                                        # アプリケーションコード（AI-DLC が生成）
+│   ├── shared/                                      # Unit 1: 共通 Zod スキーマ・型
+│   │   ├── src/
+│   │   │   ├── schemas/api/
+│   │   │   │   ├── response.schema.ts              # ApiResponse<T> 共通ラッパー型
+│   │   │   │   └── error.schema.ts                 # ErrorCode 共通エラーコード
+│   │   │   └── index.ts                            # 公開エントリポイント
+│   │   ├── package.json
+│   │   ├── tsconfig.json
+│   │   └── CODING_STANDARDS.md                     # shared のコーディング規約
+│   │
+│   └── supabase/                                    # Unit 2: DB・RLS・CLI 設定
+│       ├── migrations/                              # マイグレーションファイル置き場
+│       ├── seed.sql                                 # 開発用シードデータ雛形
+│       ├── config.toml                              # Supabase CLI 設定
+│       └── CODING_STANDARDS.md                     # supabase のコーディング規約
+│
+└── aidlc-docs/                                      # AI-DLC が生成したドキュメント群
+    ├── aidlc-state.md                               # ワークフロー進捗トラッカー
+    ├── audit.md                                     # 全インタラクションの監査ログ
+    ├── inception/
+    │   ├── requirements/
+    │   │   ├── requirement-verification-questions.md
+    │   │   └── requirements.md
+    │   ├── plans/
+    │   │   ├── execution-plan.md
+    │   │   ├── application-design-plan.md
+    │   │   └── unit-of-work-plan.md
+    │   └── application-design/
+    │       ├── application-design.md               # 統合設計書
+    │       ├── components.md
+    │       ├── component-methods.md
+    │       ├── services.md
+    │       ├── component-dependency.md
+    │       ├── unit-of-work.md
+    │       ├── unit-of-work-dependency.md
+    │       └── unit-of-work-story-map.md
+    └── construction/
+        ├── plans/
+        │   ├── shared-functional-design-plan.md
+        │   ├── shared-code-generation-plan.md
+        │   ├── supabase-functional-design-plan.md
+        │   └── supabase-code-generation-plan.md
+        ├── shared/
+        │   ├── functional-design/
+        │   │   ├── business-logic-model.md
+        │   │   ├── business-rules.md
+        │   │   └── domain-entities.md
+        │   └── code/summary.md
+        └── supabase/
+            ├── functional-design/
+            │   ├── business-logic-model.md
+            │   └── business-rules.md
+            └── code/summary.md
+```
+
+---
+
 ## 第1章: ルートファイル
 
 ---
