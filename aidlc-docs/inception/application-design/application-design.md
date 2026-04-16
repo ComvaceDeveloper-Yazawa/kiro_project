@@ -2,14 +2,14 @@
 
 ## 設計方針
 
-| 決定事項             | 採用内容                                 | 理由                                   |
-| -------------------- | ---------------------------------------- | -------------------------------------- |
-| バックエンドレイヤー | DDD 寄り 4 層                            | テスタビリティ・ビジネスロジックの分離 |
-| フロント composables | API 通信は composables、store は状態保持 | 責務の明確化・テスト容易性             |
-| Pinia 記法           | Setup 記法                               | TypeScript 親和性・柔軟性              |
-| shared 公開範囲      | Zod スキーマと推論型のみ                 | 最小依存・循環依存防止                 |
-| Fastify プラグイン   | 機能ごとに分割                           | 関心の分離・テスト容易性               |
-| エラーハンドリング   | setErrorHandler でグローバル集約         | 一貫した ApiResponse 形式の保証        |
+| 決定事項             | 採用内容                                                             | 理由                                   |
+| -------------------- | -------------------------------------------------------------------- | -------------------------------------- |
+| バックエンドレイヤー | DDD 寄り 4 層                                                        | テスタビリティ・ビジネスロジックの分離 |
+| フロント composables | composables はビジネスロジック・バリデーション、UI 描画は components | 責務の明確化・テスト容易性             |
+| Pinia 記法           | Setup 記法                                                           | TypeScript 親和性・柔軟性              |
+| shared 公開範囲      | Zod スキーマと推論型のみ                                             | 最小依存・循環依存防止                 |
+| Fastify プラグイン   | 機能ごとに分割                                                       | 関心の分離・テスト容易性               |
+| エラーハンドリング   | setErrorHandler でグローバル集約                                     | 一貫した ApiResponse 形式の保証        |
 
 ---
 
@@ -132,8 +132,8 @@ routes（Interface）
 
 ```
 views
-  ├── components（props/emits のみ）
-  ├── composables（UI ロジック）
+  ├── components（UI 描画・ユーザーインタラクション）
+  │     └── composables（ビジネスロジック・バリデーションを委譲）
   ├── composables/api（API 通信）
   │     └── useApiClient
   └── stores（永続状態参照）
@@ -169,13 +169,14 @@ HTTP Request
 
 ```
 User Action
-  → composable（UI ロジック・バリデーション）
+  → components（UI イベント受付）
+  → composables（ビジネスロジック・バリデーション）
   → composables/api（fetch 呼び出し）
   → useApiClient（認証ヘッダー・エラー処理）
   → HTTP → backend
   → ApiResponse<T> 受信
   → store 更新 or View へ返却
-  → UI 再描画
+  → components 再描画
 ```
 
 ---

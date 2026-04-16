@@ -144,13 +144,29 @@ function use{Resource}Api(): {
 ### `composables/useAuth.ts`
 
 ```typescript
-// Supabase Auth セッション管理
+// Supabase Auth セッション管理（ビジネスロジック）
 function useAuth(): {
   signIn(email: string, password: string): Promise<void>;
   signOut(): Promise<void>;
   getSession(): Promise<Session | null>;
   onAuthStateChange(callback: (session: Session | null) => void): void;
 };
+```
+
+### `composables/use{Feature}.ts`
+
+```typescript
+// フィーチャーごとのビジネスロジック・フォームバリデーション
+// UI の描画・テンプレートロジックは含めない。components に委譲する。
+function use{Feature}(): {
+  // フォームの状態と Zod バリデーション
+  formData: Ref<{FeatureFormData}>
+  errors: Ref<Partial<Record<keyof {FeatureFormData}, string>>>
+  validate(): boolean
+  // ビジネスロジック
+  submit(): Promise<void>
+  reset(): void
+}
 ```
 
 ---

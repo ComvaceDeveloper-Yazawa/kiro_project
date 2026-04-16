@@ -56,7 +56,7 @@ views/
   └── components/（UI コンポーネント）
   └── composables/api/（API 通信）
         └── useApiClient（共通 fetch ラッパー）
-  └── composables/（UI ロジック）
+  └── composables/（ビジネスロジック・バリデーション）
   └── stores/（永続状態）
         └── composables/api/（store が API composable を呼び出す場合）
 router/
@@ -65,19 +65,21 @@ router/
 
 ### 依存方向のルール
 
-| 依存元          | 依存先          | 説明                      |
-| --------------- | --------------- | ------------------------- |
-| views           | components      | UI 組み立て               |
-| views           | composables     | ロジック利用              |
-| views           | stores          | 状態参照                  |
-| composables/api | useApiClient    | fetch ラッパー経由で通信  |
-| stores          | composables/api | 必要に応じて API 呼び出し |
-| router          | useAuthStore    | 認証状態チェック          |
+| 依存元          | 依存先          | 説明                                 |
+| --------------- | --------------- | ------------------------------------ |
+| views           | components      | UI 組み立て                          |
+| components      | composables     | ビジネスロジック・バリデーション委譲 |
+| views           | composables     | ビジネスロジック利用                 |
+| views           | stores          | 状態参照                             |
+| composables/api | useApiClient    | fetch ラッパー経由で通信             |
+| stores          | composables/api | 必要に応じて API 呼び出し            |
+| router          | useAuthStore    | 認証状態チェック                     |
 
 **禁止事項:**
 
-- components が stores を直接参照すること（props/emits 経由）
+- components が stores を直接参照すること（composables 経由）
 - composables/api が stores を参照すること（循環依存防止）
+- components にビジネスロジックを直接書くこと（composables に委譲）
 
 ---
 

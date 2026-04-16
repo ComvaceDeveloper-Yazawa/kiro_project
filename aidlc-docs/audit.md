@@ -212,3 +212,74 @@
 **Context**: Unit 1: shared の Functional Design 完了
 
 ---
+
+## Functional Design (shared) - User Approval
+
+**Timestamp**: 2026-04-16T00:00:00Z
+**User Input**: "作りたいので推進してください。"
+**AI Response**: Code Generation (Unit 1: shared) へ進行。コード生成計画を作成。
+**Context**: CONSTRUCTION PHASE - Code Generation Unit 1: shared 開始
+
+---
+
+## Code Generation (shared) - Plan Approved
+
+**Timestamp**: 2026-04-16T00:05:00Z
+**User Input**: "Aでお願いします"
+**AI Response**: 計画承認。shared の Code Generation 開始。命名規則は shared 固有のみ、全般規約は backend/frontend で定義。
+**Context**: Code Generation Unit 1: shared - Part 2 Generation 開始
+
+---
+
+## Design Correction - composables/components 責務変更
+
+**Timestamp**: 2026-04-16T00:10:00Z
+**User Input**: "frontendのcomposablesにUIを作成する計画になっていましたが、UIはComponentsで作成し、Composablesはビジネスロジックメインとしてください。"
+**AI Response**: 設計ドキュメント4ファイルを修正。components.md / component-methods.md / application-design.md / component-dependency.md
+**Context**: composables = ビジネスロジック・バリデーション、components = UI 描画・インタラクション に責務を明確化
+
+---
+
+## Code Generation (shared) - User Approval
+
+**Timestamp**: 2026-04-16T00:15:00Z
+**User Input**: "進みます"
+**AI Response**: Unit 1: shared Code Generation 承認確認。Unit 2: supabase Functional Design 開始。
+**Context**: CONSTRUCTION PHASE - Functional Design Unit 2: supabase
+
+---
+
+## Functional Design (supabase) - User Answers Received
+
+**Timestamp**: 2026-04-16T00:20:00Z
+**User Input**: "完了しました"
+**AI Response**: 回答読み込み・検証完了。矛盾なし。Functional Design アーティファクト生成。
+**Context**:
+
+- Q1: B（リモート直接接続・Docker 不要）
+- Q2: A（マイグレーションファイルで RLS 管理）
+- Q3: B（profiles テーブルなし・auth.users のみ）
+
+## Functional Design (supabase) - Complete
+
+**Timestamp**: 2026-04-16T00:22:00Z
+**AI Response**: business-logic-model.md / business-rules.md 生成完了。ユーザーへ承認を求める。
+
+---
+
+## Functional Design (supabase) - User Approval
+
+**Timestamp**: 2026-04-16T00:25:00Z
+**User Input**: "承認"
+**AI Response**: supabase Functional Design 承認確認。Code Generation (Unit 2: supabase) 開始。
+**Context**: CONSTRUCTION PHASE - Code Generation Unit 2: supabase
+
+---
+
+## Code Generation (supabase) - Complete
+
+**Timestamp**: 2026-04-16T00:30:00Z
+**AI Response**: config.toml / migrations/.gitkeep / seed.sql / CODING_STANDARDS.md 生成完了。
+**Context**: Unit 2: supabase Code Generation 完了。Unit 3: backend Functional Design へ。
+
+---

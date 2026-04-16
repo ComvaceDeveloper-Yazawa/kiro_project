@@ -52,6 +52,6 @@
 ## Current Status
 
 - **Lifecycle Phase**: INCEPTION
-- **Current Stage**: CONSTRUCTION - Functional Design (Unit 1: shared)
-- **Next Stage**: Code Generation (Unit 1: shared)
-- **Status**: In Progress - Awaiting answers
+- **Current Stage**: CONSTRUCTION - Functional Design (Unit 3: backend)
+- **Next Stage**: Code Generation (Unit 3: backend)
+- **Status**: Awaiting Functional Design
