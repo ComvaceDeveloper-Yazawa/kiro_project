@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 // =============================================================================
 // ApiResponse 共通ラッパー型
@@ -35,11 +35,11 @@ export const ApiErrorSchema = z.object({
 
 // --- 型エイリアス ---
 
-export type ApiSuccessResponse<T> = {
+export interface ApiSuccessResponse<T> {
   success: true;
   data: T;
   message: string;
-};
+}
 
 export type ApiErrorResponse = z.infer<typeof ApiErrorSchema>;
 

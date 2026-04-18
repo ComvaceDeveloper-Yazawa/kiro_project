@@ -10,7 +10,7 @@ import { useAuthStore } from "../../stores/useAuthStore";
  */
 export function useApiClient() {
   const authStore = useAuthStore();
-  const baseUrl = import.meta.env["VITE_API_BASE_URL"] as string;
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   async function request<T>(
     path: string,
@@ -24,7 +24,7 @@ export function useApiClient() {
     };
 
     if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
+      headers.Authorization = `Bearer ${token}`;
     }
 
     const response = await fetch(`${baseUrl}${path}`, {
