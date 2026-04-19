@@ -11,6 +11,8 @@
     "dev:frontend": "pnpm --filter @monorepo/frontend dev",
     "build": "pnpm --filter @monorepo/shared build && pnpm --filter @monorepo/backend build && pnpm --filter @monorepo/frontend build",
     "test": "pnpm --filter @monorepo/shared test && pnpm --filter @monorepo/backend test && pnpm --filter @monorepo/frontend test",
+    "test:all": "vitest --workspace vitest.workspace.ts --run",
+    "test:coverage": "vitest --workspace vitest.workspace.ts --run --coverage",
     "test:e2e": "pnpm --filter @monorepo/e2e test",
     "lint": "pnpm --filter @monorepo/shared lint && pnpm --filter @monorepo/backend lint && pnpm --filter @monorepo/frontend lint",
     "format": "pnpm --filter @monorepo/shared format && pnpm --filter @monorepo/backend format && pnpm --filter @monorepo/frontend format",
@@ -18,6 +20,7 @@
     "db:generate": "pnpm --filter @monorepo/backend db:generate"
   },
   "devDependencies": {
-    "prettier": "^3.3.3"
+    "prettier": "^3.3.3",
+    "vitest": "^2.1.9"
   }
 }
