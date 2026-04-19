@@ -19,7 +19,7 @@ declare module "fastify" {
 const dbPlugin: FastifyPluginAsync = async (fastify) => {
   const prisma = new PrismaClient({
     log:
-      process.env["NODE_ENV"] === "development"
+      process.env.NODE_ENV === "development"
         ? ["query", "error", "warn"]
         : ["error"],
   });

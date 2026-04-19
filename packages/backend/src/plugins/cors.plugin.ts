@@ -9,7 +9,7 @@ import cors from "@fastify/cors";
  * 認証エンドポイントにワイルドカードオリジンは使用しない。
  */
 const corsPlugin: FastifyPluginAsync = async (fastify) => {
-  const rawOrigin = process.env["CORS_ORIGIN"] ?? "http://localhost:5173";
+  const rawOrigin = process.env.CORS_ORIGIN ?? "http://localhost:5173";
   // カンマ区切りで複数オリジン指定可能
   const allowedOrigins = rawOrigin.split(",").map((o) => o.trim());
 

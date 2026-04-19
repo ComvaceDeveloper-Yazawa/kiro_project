@@ -20,7 +20,7 @@ import routesPlugin from "./plugins/routes.plugin.js";
 export async function buildApp() {
   const app = Fastify({
     logger: {
-      level: process.env["NODE_ENV"] === "production" ? "info" : "debug",
+      level: process.env.NODE_ENV === "production" ? "info" : "debug",
       // 構造化ログ（SECURITY-03）: timestamp・requestId・level・message を含む
       serializers: {
         req(request) {

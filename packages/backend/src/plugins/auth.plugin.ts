@@ -25,9 +25,9 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.addHook("preHandler", async (request) => {
     // auth: false が設定されたルートはスキップ
     const routeConfig = request.routeOptions.config as Record<string, unknown>;
-    if (routeConfig["auth"] === false) return;
+    if (routeConfig.auth === false) return;
 
-    const authHeader = request.headers["authorization"];
+    const authHeader = request.headers.authorization;
     if (!authHeader?.startsWith("Bearer ")) {
       throw new UnauthorizedError();
     }

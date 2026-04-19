@@ -9,7 +9,7 @@ import rateLimit from "@fastify/rate-limit";
  * 認証エンドポイントは routes 側で個別に AUTH_RATE_LIMIT_MAX を適用すること。
  */
 const rateLimitPlugin: FastifyPluginAsync = async (fastify) => {
-  const max = parseInt(process.env["RATE_LIMIT_MAX"] ?? "100", 10);
+  const max = parseInt(process.env.RATE_LIMIT_MAX ?? "100", 10);
 
   await fastify.register(rateLimit, {
     global: true,
