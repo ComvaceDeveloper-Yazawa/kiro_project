@@ -104,20 +104,20 @@
 
 ### Task 10: Prisma リポジトリ作成
 
-- [ ] 10.1. ArticleRepository インターフェース作成（`packages/backend/src/domain/repositories/article.repository.ts`）
-- [ ] 10.2. ArticleRepositoryImpl 実装作成（`packages/backend/src/infrastructure/prisma/article.repository.impl.ts`）
+- [x] 10.1. ArticleRepository インターフェース作成（`packages/backend/src/domain/repositories/article.repository.ts`）
+- [x] 10.2. ArticleRepositoryImpl 実装作成（`packages/backend/src/infrastructure/prisma/article.repository.impl.ts`）
   - save, findById, findAll, findByAuthorId, findByTags, delete メソッド
-- [ ] 10.3. TagRepository インターフェース作成（`packages/backend/src/domain/repositories/tag.repository.ts`）
-- [ ] 10.4. TagRepositoryImpl 実装作成（`packages/backend/src/infrastructure/prisma/tag.repository.impl.ts`）
+- [x] 10.3. TagRepository インターフェース作成（`packages/backend/src/domain/repositories/tag.repository.ts`）
+- [x] 10.4. TagRepositoryImpl 実装作成（`packages/backend/src/infrastructure/prisma/tag.repository.impl.ts`）
   - save, findByName, findAll, findOrCreate メソッド
-- [ ] 10.5. ArticleImageRepository インターフェース作成（`packages/backend/src/domain/repositories/article-image.repository.ts`）
-- [ ] 10.6. ArticleImageRepositoryImpl 実装作成（`packages/backend/src/infrastructure/prisma/article-image.repository.impl.ts`）
+- [x] 10.5. ArticleImageRepository インターフェース作成（`packages/backend/src/domain/repositories/article-image.repository.ts`）
+- [x] 10.6. ArticleImageRepositoryImpl 実装作成（`packages/backend/src/infrastructure/prisma/article-image.repository.impl.ts`）
   - save, findByArticleId, delete メソッド
 
 ### Task 11: Supabase Storage サービス作成
 
-- [ ] 11.1. StorageService インターフェース作成（`packages/backend/src/domain/services/storage.service.ts`）
-- [ ] 11.2. SupabaseStorageService 実装作成（`packages/backend/src/infrastructure/supabase/storage.service.impl.ts`）
+- [x] 11.1. StorageService インターフェース作成（`packages/backend/src/domain/services/storage.service.ts`）
+- [x] 11.2. SupabaseStorageService 実装作成（`packages/backend/src/infrastructure/supabase/storage.service.impl.ts`）
   - uploadImage, deleteImage, getPublicUrl メソッド
 
 ---
