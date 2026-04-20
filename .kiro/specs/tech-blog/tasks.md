@@ -75,28 +75,28 @@
 
 ### Task 7: Domain エンティティ作成
 
-- [ ] 7.1. Article エンティティ作成（`packages/backend/src/domain/entities/article.entity.ts`）
-- [ ] 7.2. Tag エンティティ作成（`packages/backend/src/domain/entities/tag.entity.ts`）
-- [ ] 7.3. ArticleImage エンティティ作成（`packages/backend/src/domain/entities/article-image.entity.ts`）
+- [x] 7.1. Article エンティティ作成（`packages/backend/src/domain/entities/article.entity.ts`）
+- [x] 7.2. Tag エンティティ作成（`packages/backend/src/domain/entities/tag.entity.ts`）
+- [x] 7.3. ArticleImage エンティティ作成（`packages/backend/src/domain/entities/article-image.entity.ts`）
 
 ### Task 8: Domain サービス作成
 
-- [ ] 8.1. MarkdownParser サービス作成（`packages/backend/src/domain/services/markdown-parser.service.ts`）
+- [x] 8.1. MarkdownParser サービス作成（`packages/backend/src/domain/services/markdown-parser.service.ts`）
   - parse(markdown: string): string メソッド
   - validate(markdown: string): ValidationResult メソッド
   - sanitize(html: string): string メソッド
-- [ ] 8.2. MarkdownPrinter サービス作成（`packages/backend/src/domain/services/markdown-printer.service.ts`）
+- [x] 8.2. MarkdownPrinter サービス作成（`packages/backend/src/domain/services/markdown-printer.service.ts`）
   - print(article: Article): string メソッド
-- [ ] 8.3. SandboxValidator サービス作成（`packages/backend/src/domain/services/sandbox-validator.service.ts`）
+- [x] 8.3. SandboxValidator サービス作成（`packages/backend/src/domain/services/sandbox-validator.service.ts`）
   - validateUrl(url: string): boolean メソッド
   - generateEmbedCode(url: string, type: 'stackblitz' | 'codesandbox'): string メソッド
 
 ### Task 9: Domain エラークラス作成
 
-- [ ] 9.1. ValidationError クラス作成（`packages/backend/src/domain/errors/validation.error.ts`）
-- [ ] 9.2. AuthorizationError クラス作成（`packages/backend/src/domain/errors/authorization.error.ts`）
-- [ ] 9.3. NotFoundError クラス作成（`packages/backend/src/domain/errors/not-found.error.ts`）
-- [ ] 9.4. ConflictError クラス作成（`packages/backend/src/domain/errors/conflict.error.ts`）
+- [x] 9.1. ValidationError クラス作成（`packages/backend/src/domain/errors/validation.error.ts`）
+- [x] 9.2. AuthorizationError クラス作成（`packages/backend/src/domain/errors/authorization.error.ts`）
+- [x] 9.3. NotFoundError クラス作成（`packages/backend/src/domain/errors/not-found.error.ts`）
+- [x] 9.4. ConflictError クラス作成（`packages/backend/src/domain/errors/conflict.error.ts`）
 
 ---
 
