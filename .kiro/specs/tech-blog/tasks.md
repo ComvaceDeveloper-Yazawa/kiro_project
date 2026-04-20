@@ -150,7 +150,7 @@
 
 ### Task 15: Article Routes 作成
 
-- [ ] 15.1. article.route.ts 作成（`packages/backend/src/routes/article.route.ts`）
+- [x] 15.1. article.route.ts 作成（`packages/backend/src/routes/article.route.ts`）
   - POST /api/articles - 記事作成
   - GET /api/articles - 公開記事一覧
   - GET /api/articles/:id - 記事詳細
@@ -162,20 +162,20 @@
 
 ### Task 16: Tag Routes 作成
 
-- [ ] 16.1. tag.route.ts 作成（`packages/backend/src/routes/tag.route.ts`）
+- [x] 16.1. tag.route.ts 作成（`packages/backend/src/routes/tag.route.ts`）
   - GET /api/tags - タグ一覧
 
 ### Task 17: Image Routes 作成
 
-- [ ] 17.1. image.route.ts 作成（`packages/backend/src/routes/image.route.ts`）
+- [x] 17.1. image.route.ts 作成（`packages/backend/src/routes/image.route.ts`）
   - POST /api/images - 画像アップロード
   - DELETE /api/images/:id - 画像削除
 
 ### Task 18: Routes プラグイン登録
 
-- [ ] 18.1. routes.plugin.ts に article.route を登録
-- [ ] 18.2. routes.plugin.ts に tag.route を登録
-- [ ] 18.3. routes.plugin.ts に image.route を登録
+- [x] 18.1. routes.plugin.ts に article.route を登録
+- [x] 18.2. routes.plugin.ts に tag.route を登録
+- [x] 18.3. routes.plugin.ts に image.route を登録
 
 ---
 
