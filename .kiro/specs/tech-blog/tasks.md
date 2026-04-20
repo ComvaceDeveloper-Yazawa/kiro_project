@@ -244,15 +244,15 @@
 
 ### Task 28: Article Views 作成
 
-- [ ] 28.1. ArticleListView.vue 作成（`packages/frontend/src/views/ArticleListView.vue`）
-- [ ] 28.2. ArticleDetailView.vue 作成（`packages/frontend/src/views/ArticleDetailView.vue`）
-- [ ] 28.3. ArticleCreateView.vue 作成（`packages/frontend/src/views/ArticleCreateView.vue`）
-- [ ] 28.4. ArticleEditView.vue 作成（`packages/frontend/src/views/ArticleEditView.vue`）
-- [ ] 28.5. MyArticlesView.vue 作成（`packages/frontend/src/views/MyArticlesView.vue`）
+- [x] 28.1. ArticleListView.vue 作成（`packages/frontend/src/views/ArticleListView.vue`）
+- [x] 28.2. ArticleDetailView.vue 作成（`packages/frontend/src/views/ArticleDetailView.vue`）
+- [x] 28.3. ArticleCreateView.vue 作成（`packages/frontend/src/views/ArticleCreateView.vue`）
+- [x] 28.4. ArticleEditView.vue 作成（`packages/frontend/src/views/ArticleEditView.vue`）
+- [x] 28.5. MyArticlesView.vue 作成（`packages/frontend/src/views/MyArticlesView.vue`）
 
 ### Task 29: Vue Router 設定
 
-- [ ] 29.1. Article ルート追加（`packages/frontend/src/router/index.ts`）
+- [x] 29.1. Article ルート追加（`packages/frontend/src/router/index.ts`）
   - /articles - 公開記事一覧
   - /articles/:id - 記事詳細
   - /articles/new - 記事作成
