@@ -211,7 +211,7 @@
 
 ### Task 23: Article Store 作成
 
-- [ ] 23.1. useArticleStore 作成（`packages/frontend/src/stores/article.store.ts`）
+- [x] 23.1. useArticleStore 作成（`packages/frontend/src/stores/article.store.ts`）
   - 記事データの永続保持、キャッシュ管理
 
 ---
