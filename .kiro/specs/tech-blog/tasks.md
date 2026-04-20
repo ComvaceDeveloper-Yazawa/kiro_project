@@ -45,27 +45,27 @@
 
 ### Task 5: Zod スキーマ定義
 
-- [ ] 5.1. Article 関連の Zod スキーマ作成（`packages/shared/src/schemas/article.schema.ts`）
+- [x] 5.1. Article 関連の Zod スキーマ作成（`packages/shared/src/schemas/article.schema.ts`）
   - CreateArticleSchema（title, content, tags）
   - UpdateArticleSchema（title, content, tags）
   - ArticleSchema（id, title, content, authorId, isPublished, publishedAt, createdAt, updatedAt, tags）
-- [ ] 5.2. Tag 関連の Zod スキーマ作成（`packages/shared/src/schemas/tag.schema.ts`）
+- [x] 5.2. Tag 関連の Zod スキーマ作成（`packages/shared/src/schemas/tag.schema.ts`）
   - TagSchema（id, name, createdAt）
-- [ ] 5.3. Image 関連の Zod スキーマ作成（`packages/shared/src/schemas/image.schema.ts`）
+- [x] 5.3. Image 関連の Zod スキーマ作成（`packages/shared/src/schemas/image.schema.ts`）
   - UploadImageSchema（file, articleId）
   - ArticleImageSchema（id, articleId, storagePath, url, createdAt）
-- [ ] 5.4. Pagination 関連の Zod スキーマ作成（`packages/shared/src/schemas/pagination.schema.ts`）
+- [x] 5.4. Pagination 関連の Zod スキーマ作成（`packages/shared/src/schemas/pagination.schema.ts`）
   - PaginationSchema（page, pageSize）
 
 ### Task 6: TypeScript 型定義
 
-- [ ] 6.1. Article 型定義作成（`packages/shared/src/types/article.types.ts`）
+- [x] 6.1. Article 型定義作成（`packages/shared/src/types/article.types.ts`）
   - Article, CreateArticleInput, UpdateArticleInput
-- [ ] 6.2. Tag 型定義作成（`packages/shared/src/types/tag.types.ts`）
+- [x] 6.2. Tag 型定義作成（`packages/shared/src/types/tag.types.ts`）
   - Tag
-- [ ] 6.3. Image 型定義作成（`packages/shared/src/types/image.types.ts`）
+- [x] 6.3. Image 型定義作成（`packages/shared/src/types/image.types.ts`）
   - ArticleImage, UploadImageInput
-- [ ] 6.4. Pagination 型定義作成（`packages/shared/src/types/pagination.types.ts`）
+- [-] 6.4. Pagination 型定義作成（`packages/shared/src/types/pagination.types.ts`）
   - PaginationOptions, PaginatedResponse
 
 ---
