@@ -220,23 +220,23 @@
 
 ### Task 24: Article Components 作成
 
-- [ ] 24.1. ArticleCard.vue 作成（`packages/frontend/src/components/ArticleCard.vue`）
-- [ ] 24.2. ArticleForm.vue 作成（`packages/frontend/src/components/ArticleForm.vue`）
-- [ ] 24.3. MarkdownEditor.vue 作成（`packages/frontend/src/components/MarkdownEditor.vue`）
-- [ ] 24.4. MarkdownPreview.vue 作成（`packages/frontend/src/components/MarkdownPreview.vue`）
+- [x] 24.1. ArticleCard.vue 作成（`packages/frontend/src/components/ArticleCard.vue`）
+- [x] 24.2. ArticleForm.vue 作成（`packages/frontend/src/components/ArticleForm.vue`）
+- [x] 24.3. MarkdownEditor.vue 作成（`packages/frontend/src/components/MarkdownEditor.vue`）
+- [x] 24.4. MarkdownPreview.vue 作成（`packages/frontend/src/components/MarkdownPreview.vue`）
 
 ### Task 25: Tag Components 作成
 
-- [ ] 25.1. TagFilter.vue 作成（`packages/frontend/src/components/TagFilter.vue`）
-- [ ] 25.2. TagInput.vue 作成（`packages/frontend/src/components/TagInput.vue`）
+- [x] 25.1. TagFilter.vue 作成（`packages/frontend/src/components/TagFilter.vue`）
+- [x] 25.2. TagInput.vue 作成（`packages/frontend/src/components/TagInput.vue`）
 
 ### Task 26: Image Components 作成
 
-- [ ] 26.1. ImageUploader.vue 作成（`packages/frontend/src/components/ImageUploader.vue`）
+- [x] 26.1. ImageUploader.vue 作成（`packages/frontend/src/components/ImageUploader.vue`）
 
 ### Task 27: Sandbox Components 作成
 
-- [ ] 27.1. SandboxEmbed.vue 作成（`packages/frontend/src/components/SandboxEmbed.vue`）
+- [x] 27.1. SandboxEmbed.vue 作成（`packages/frontend/src/components/SandboxEmbed.vue`）
 
 ---
 
