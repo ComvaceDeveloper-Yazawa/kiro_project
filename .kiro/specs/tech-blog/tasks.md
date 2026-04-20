@@ -65,8 +65,9 @@
   - Tag
 - [x] 6.3. Image 型定義作成（`packages/shared/src/types/image.types.ts`）
   - ArticleImage, UploadImageInput
-- [-] 6.4. Pagination 型定義作成（`packages/shared/src/types/pagination.types.ts`）
+- [x] 6.4. Pagination 型定義作成（`packages/shared/src/types/pagination.types.ts`）
   - PaginationOptions, PaginatedResponse
+- [x] 6.5. Index ファイル作成（schemas/index.ts, types/index.ts, src/index.ts）
 
 ---
 
