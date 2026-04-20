@@ -6,7 +6,7 @@
 
 [project]
 # supabase link --project-ref <ref> で設定される
-# project_id = "your-project-ref"
+# project_id = "plytrwrjwjquvcgsppbt"
 
 [api]
 # ローカル開発用ポート（supabase start 使用時のみ有効）
