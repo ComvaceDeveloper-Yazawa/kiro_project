@@ -12,7 +12,175 @@ AI-DLCは、AIがソフトウェア開発の各フェーズを構造的にガイ
 
 ---
 
+## 技術ブログ機能
+
+このプロジェクトには技術ブログ機能が実装されています。
+
+### 機能概要
+
+- **記事管理**: Markdown形式での記事作成・編集・公開・削除
+- **画像アップロード**: 記事内に画像を挿入可能（最大5MB）
+- **タグ機能**: 記事にタグを付けて分類・検索
+- **サンドボックス埋め込み**: StackBlitz/CodeSandboxのコード実行環境を記事内に埋め込み
+- **レスポンシブデザイン**: モバイル・タブレット・デスクトップ対応
+- **アクセシビリティ**: WCAG AA準拠
+
+### 技術スタック
+
+**Backend:**
+
+- Fastify + TypeScript
+- Prisma (ORM)
+- Supabase (Database + Storage + Auth)
+- Zod (Validation)
+
+**Frontend:**
+
+- Vue 3 (Composition API)
+- TypeScript
+- Pinia (State Management)
+- Vue Router
+- Marked + DOMPurify (Markdown処理)
+
+**Shared:**
+
+- Zod schemas
+- TypeScript types
+
+### API ドキュメント
+
+詳細なAPI仕様は [docs/TECH_BLOG_API.md](docs/TECH_BLOG_API.md) を参照してください。
+
+### 開発状況
+
+- ✅ Phase 1-6: Backend完成（Domain, Infrastructure, Application, Interface層）
+- ✅ Phase 7-10: Frontend完成（Composables, Stores, Components, Views, Router）
+- ✅ Phase 11: スタイリング（レスポンシブ・アクセシビリティ対応）
+- 🚧 Phase 12-16: テスト・ドキュメント作成中
+
+---
+
 ## ディレクトリ構造
+
+```
+.
+├── README.md                          # このファイル
+├── docs/
+│   └── TECH_BLOG_API.md              # 技術ブログAPI仕様書
+├── packages/
+│   ├── backend/                      # Fastify + Prisma
+│   ├── frontend/                     # Vue 3 + TypeScript
+│   ├── shared/                       # 共通型定義・Zodスキーマ
+│   ├── supabase/                     # Supabaseマイグレーション
+│   └── e2e/                          # E2Eテスト（Playwright）
+└── .kiro/
+    ├── specs/
+    │   └── tech-blog/                # 技術ブログ機能のSpec
+    ├── steering/
+    │   └── aws-aidlc-rules/
+    │       └── core-workflow.md      # ワークフロー全体のルール定義
+    └── aws-aidlc-rule-details/       # 各フェーズ・ステージの詳細ルール
+        ├── common/                   # 全フェーズ共通ルール
+        ├── inception/                # インセプションフェーズのルール
+        ├── construction/             # コンストラクションフェーズのルール
+        ├── operations/               # オペレーションフェーズのルール（将来拡張用）
+        └── extensions/
+            └── security/
+                └── baseline/         # セキュリティベースラインルール
+```
+
+---
+
+## セットアップ
+
+### 前提条件
+
+- Node.js >= 20
+- pnpm >= 9
+- Supabase CLI
+
+### インストール
+
+```bash
+# 依存関係のインストール
+pnpm install
+
+# Supabaseプロジェクトとリンク
+cd packages/supabase
+supabase link --project-ref <your-project-ref>
+
+# マイグレーション適用
+supabase db push
+
+# Prisma Client生成
+cd ../backend
+pnpm db:generate
+```
+
+### 環境変数
+
+`packages/backend/.env`:
+
+```
+DATABASE_URL="postgresql://..."
+DIRECT_URL="postgresql://..."
+SUPABASE_URL="https://..."
+SUPABASE_ANON_KEY="..."
+```
+
+`packages/frontend/.env`:
+
+```
+VITE_API_BASE_URL="http://localhost:3000"
+VITE_SUPABASE_URL="https://..."
+VITE_SUPABASE_ANON_KEY="..."
+```
+
+### 開発サーバー起動
+
+```bash
+# Backend
+pnpm dev:backend
+
+# Frontend
+pnpm dev:frontend
+```
+
+---
+
+## AI-DLC ワークフロー概要
+
+AI-DLCは3つのフェーズで構成されています。
+
+```
+ユーザーリクエスト
+        |
+        v
++---------------------------------------+
+|  INCEPTION PHASE（インセプション）      |
+|  「何を作るか・なぜ作るか」を決める      |
++---------------------------------------+
+        |
+        v
++---------------------------------------+
+|  CONSTRUCTION PHASE（コンストラクション）|
+|  「どのように作るか」を実装する          |
++---------------------------------------+
+        |
+        v
++---------------------------------------+
+|  OPERATIONS PHASE（オペレーション）     |
+|  デプロイ・運用（将来拡張予定）          |
++---------------------------------------+
+```
+
+詳細は元のREADME内容を参照してください。
+
+---
+
+## ライセンス
+
+MIT
 
 ```
 .
