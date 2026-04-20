@@ -183,26 +183,26 @@
 
 ### Task 19: Article Composables 作成
 
-- [ ] 19.1. useArticleApi composable 作成（`packages/frontend/src/composables/useArticleApi.ts`）
+- [x] 19.1. useArticleApi composable 作成（`packages/frontend/src/composables/useArticleApi.ts`）
   - createArticle, updateArticle, publishArticle, deleteArticle, getArticle, listArticles, searchArticlesByTags API 呼び出し
-- [ ] 19.2. useArticle composable 作成（`packages/frontend/src/composables/useArticle.ts`）
+- [x] 19.2. useArticle composable 作成（`packages/frontend/src/composables/useArticle.ts`）
   - 記事ビジネスロジック（バリデーション、状態管理）
 
 ### Task 20: Markdown Composables 作成
 
-- [ ] 20.1. useMarkdown composable 作成（`packages/frontend/src/composables/useMarkdown.ts`）
+- [x] 20.1. useMarkdown composable 作成（`packages/frontend/src/composables/useMarkdown.ts`）
   - Markdown パース、プレビュー、シンタックスハイライト
 
 ### Task 21: Image Composables 作成
 
-- [ ] 21.1. useImageUpload composable 作成（`packages/frontend/src/composables/useImageUpload.ts`）
+- [x] 21.1. useImageUpload composable 作成（`packages/frontend/src/composables/useImageUpload.ts`）
   - 画像アップロード、プレビュー、削除
 
 ### Task 22: Tag Composables 作成
 
-- [ ] 22.1. useTagApi composable 作成（`packages/frontend/src/composables/useTagApi.ts`）
+- [x] 22.1. useTagApi composable 作成（`packages/frontend/src/composables/useTagApi.ts`）
   - listTags API 呼び出し
-- [ ] 22.2. useTag composable 作成（`packages/frontend/src/composables/useTag.ts`）
+- [x] 22.2. useTag composable 作成（`packages/frontend/src/composables/useTag.ts`）
   - タグ管理ロジック
 
 ---
