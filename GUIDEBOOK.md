@@ -1897,11 +1897,19 @@ Vercel環境で環境変数が正しく読み込まれない問題（特に`supa
   - ブラウザのコンソールで確認（開発者ツール → Console → 環境変数チェックログの確認）
   - 正常な場合: `🔍 Supabase環境変数チェック: { url: "✅ 設定済み", key: "✅ 設定済み", urlValue: "https://...", keyPreview: "eyJ..." }`
   - 異常な場合: `🔍 Supabase環境変数チェック: { url: "❌ 未設定", key: "❌ 未設定", urlValue: undefined, keyPreview: "なし" }`
-- **よくある原因と解決策**（4つ）:
+- **よくある原因と解決策**（5つ）:
   - 原因1: 環境変数名が間違っている（`VITE_`プレフィックスがない・スペルミス・大文字小文字が違う）
   - 原因2: 環境が選択されていない（Production / Preview / Developmentのチェック漏れ）
   - 原因3: 再デプロイしていない（環境変数はビルド時に埋め込まれるため、既存のデプロイには反映されない）
   - 原因4: ビルドキャッシュの問題（"Use existing Build Cache"のチェックを外して再デプロイ）
+  - **原因5: Viteが環境変数を認識しない（モノレポ特有の問題）** — **2026-04-22追加**
+    - **症状**: Vercel Dashboardで環境変数が正しく設定されている・再デプロイも実行した・ブラウザのコンソールで環境変数が`undefined`または`${VITE_SUPABASE_URL}`のような文字列になっている
+    - **原因**: モノレポ構成の場合、Vercelの環境変数がViteのビルドプロセスに正しく渡されないことがある
+    - **解決策**: `vercel.json`のビルドコマンドで環境変数を明示的にエクスポートする
+      - **修正前**: `{ "buildCommand": "pnpm build:frontend" }`
+      - **修正後**: `{ "buildCommand": "export VITE_API_BASE_URL=\"$VITE_API_BASE_URL\" && export VITE_SUPABASE_URL=\"$VITE_SUPABASE_URL\" && export VITE_SUPABASE_ANON_KEY=\"$VITE_SUPABASE_ANON_KEY\" && pnpm build:frontend" }`
+    - **効果**: Vercelの環境変数がシェル環境変数として明示的にエクスポートされ、Viteが確実に読み込めるようになる
+    - **注意**: `.env.production`ファイルで`${VAR}`構文を使った変数置換は**機能しない**（Vercelは`.env`ファイル内の変数置換をサポートしていない）
 - **チェックリスト**（7項目）:
   - Vercel Dashboardで環境変数が設定されている
   - 環境変数名が`VITE_`で始まっている

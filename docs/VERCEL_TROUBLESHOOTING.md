@@ -164,6 +164,41 @@ VITE_SUPABASE_ANON_KEY_    ❌ (末尾にアンダースコア)
 2. **"Use existing Build Cache"** のチェックを**外す**
 3. "Redeploy" をクリック
 
+### 原因5: Viteが環境変数を認識しない（モノレポ特有の問題）
+
+**症状**:
+
+- Vercel Dashboardで環境変数が正しく設定されている
+- 再デプロイも実行した
+- ブラウザのコンソールで環境変数が`undefined`または`${VITE_SUPABASE_URL}`のような文字列になっている
+
+**原因**:
+モノレポ構成の場合、Vercelの環境変数がViteのビルドプロセスに正しく渡されないことがあります。
+
+**解決策**:
+
+`vercel.json`のビルドコマンドで環境変数を明示的にエクスポートします。
+
+**修正前**:
+
+```json
+{
+  "buildCommand": "pnpm build:frontend"
+}
+```
+
+**修正後**:
+
+```json
+{
+  "buildCommand": "export VITE_API_BASE_URL=\"$VITE_API_BASE_URL\" && export VITE_SUPABASE_URL=\"$VITE_SUPABASE_URL\" && export VITE_SUPABASE_ANON_KEY=\"$VITE_SUPABASE_ANON_KEY\" && pnpm build:frontend"
+}
+```
+
+この修正により、Vercelの環境変数がシェル環境変数として明示的にエクスポートされ、Viteが確実に読み込めるようになります。
+
+**注意**: `.env.production`ファイルで`${VAR}`構文を使った変数置換は**機能しません**。Vercelは`.env`ファイル内の変数置換をサポートしていません。
+
 ---
 
 ## 📋 チェックリスト
