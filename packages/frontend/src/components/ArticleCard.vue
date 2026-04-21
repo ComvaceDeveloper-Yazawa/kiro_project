@@ -57,10 +57,11 @@ const truncateContent = (content: string, maxLength: number): string => {
 <style scoped>
 .article-card {
   padding: 1.5rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-border);
   border-radius: 0.5rem;
-  background: white;
+  background: var(--color-surface);
   transition: box-shadow 0.2s;
+  width: 100%;
 }
 
 .article-card:hover {
@@ -81,12 +82,12 @@ const truncateContent = (content: string, maxLength: number): string => {
 }
 
 .article-card__title a {
-  color: #1f2937;
+  color: var(--color-text);
   text-decoration: none;
 }
 
 .article-card__title a:hover {
-  color: #3b82f6;
+  color: var(--color-accent);
 }
 
 .article-card__draft-badge {
@@ -101,12 +102,12 @@ const truncateContent = (content: string, maxLength: number): string => {
   display: flex;
   gap: 1rem;
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--color-text-muted);
   margin-bottom: 1rem;
 }
 
 .article-card__content {
-  color: #4b5563;
+  color: var(--color-text);
   line-height: 1.6;
   margin-bottom: 1rem;
 }
@@ -123,5 +124,15 @@ const truncateContent = (content: string, maxLength: number): string => {
   color: #1e40af;
   font-size: 0.875rem;
   border-radius: 9999px;
+}
+
+[data-theme='dark'] .article-card__draft-badge {
+  background: #78350f;
+  color: #fef3c7;
+}
+
+[data-theme='dark'] .article-card__tag {
+  background: #1e3a8a;
+  color: #93c5fd;
 }
 </style>

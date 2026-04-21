@@ -23,6 +23,7 @@ export const CreateArticleSchema = z.object({
     .max(10, 'タグは10個以内である必要があります')
     .default([]),
   isPublished: z.boolean().optional().default(false), // 公開するかどうか
+  nextArticleId: z.string().uuid().optional().nullable(), // 次に読むべき記事のID
 });
 
 /**
@@ -47,6 +48,7 @@ export const UpdateArticleSchema = z.object({
     )
     .max(10, 'タグは10個以内である必要があります')
     .default([]),
+  nextArticleId: z.string().uuid().optional().nullable(), // 次に読むべき記事のID
 });
 
 /**
@@ -59,6 +61,7 @@ export const ArticleSchema = z.object({
   authorId: z.string().uuid(),
   isPublished: z.boolean(),
   publishedAt: z.date().nullable(),
+  nextArticleId: z.string().uuid().nullable().optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
   tags: z.array(
@@ -67,6 +70,13 @@ export const ArticleSchema = z.object({
       name: z.string(),
     }),
   ),
+  nextArticle: z
+    .object({
+      id: z.string().uuid(),
+      title: z.string(),
+    })
+    .nullable()
+    .optional(),
 });
 
 /**

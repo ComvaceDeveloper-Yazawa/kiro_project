@@ -1363,6 +1363,253 @@ components にビジネスロジックを書くことは禁止されています
 
 ---
 
+### `docs/NEXT_ARTICLE_FEATURE.md`
+
+**何を定義しているか:**
+技術ブログ機能の「次に読むべき記事」機能のセットアップ手順・使い方・データベーススキーマ変更・API変更を定義した機能ドキュメントです。以下の内容が含まれます。
+
+- **機能概要**:
+  - 記事の連結（記事に「次の記事」を設定可能）
+  - 記事詳細画面での「次に読む」セクション表示
+  - 記事編集画面での次の記事選択ドロップダウン
+- **セットアップ手順**:
+  - データベースマイグレーション実行（`npx prisma migrate deploy` または `npx prisma migrate dev`）
+  - Prismaクライアントの再生成（`npx prisma generate`）
+  - アプリケーションの再起動
+- **使い方**:
+  - 記事編集画面での次の記事設定手順（ドロップダウンから選択 → 保存）
+  - 記事詳細画面での次の記事確認手順（記事下部の「次に読む」セクション → クリックで移動）
+- **データベーススキーマ変更**:
+  - `articles` テーブルに `next_article_id` カラム追加（UUID型・NULL許可）
+  - 外部キー制約追加（`articles.next_article_id` → `articles.id`・ON DELETE SET NULL・ON UPDATE CASCADE）
+  - インデックス追加（`idx_articles_next_article_id`）
+- **API変更**:
+  - `CreateArticleInput` に `nextArticleId?: string | null` フィールド追加
+  - `UpdateArticleInput` に `nextArticleId?: string | null` フィールド追加
+  - `Article` 型に `nextArticleId?: string | null` と `nextArticle?: { id: string; title: string } | null` フィールド追加
+- **実装ファイル一覧**:
+  - バックエンド（6ファイル）: `schema.prisma` / マイグレーションSQL / `article.entity.ts` / `article.repository.impl.ts` / `create-article.usecase.ts` / `update-article.usecase.ts`
+  - 共有（1ファイル）: `article.schema.ts`
+  - フロントエンド（3ファイル）: `ArticleForm.vue` / `ArticleEditView.vue` / `ArticleDetailView.vue`
+- **注意事項**:
+  - 循環参照（A→B→A）は現在チェックしていない
+  - 次の記事は同じ著者の記事のみ選択可能
+  - 次の記事が削除された場合は自動的に `null` に設定される（ON DELETE SET NULL）
+
+**なぜ存在するか:**
+技術ブログ機能（`.kiro/specs/tech-blog/`）の実装完了後、記事を連載形式で繋げる「次に読むべき記事」機能が追加実装されました。以下の目的で作成されました:
+
+1. **機能追加のドキュメント化**: 既存の技術ブログ機能に新しく追加された「次に読むべき記事」機能の仕様・使い方・実装詳細を一箇所にまとめ、開発者が機能全体を理解できるようにする
+2. **セットアップ手順の明文化**: データベースマイグレーション実行・Prismaクライアント再生成・アプリケーション再起動の手順を明示し、既存環境に機能を追加する際の手順を明確にする
+3. **データベーススキーマ変更の記録**: `articles` テーブルへの `next_article_id` カラム追加・外部キー制約・インデックス追加の詳細を記録し、データベース構造の変更履歴を残す
+4. **API変更の明示**: `CreateArticleInput` / `UpdateArticleInput` / `Article` 型への `nextArticleId` / `nextArticle` フィールド追加を明示し、フロントエンド・バックエンド開発者が型定義の変更を把握できるようにする
+5. **実装ファイルの一覧化**: バックエンド・共有・フロントエンドの各層で変更されたファイルを一覧化し、機能追加に伴うコード変更の全体像を把握できるようにする
+6. **注意事項の明記**: 循環参照チェックの未実装・同じ著者の記事のみ選択可能・削除時の自動NULL設定などの制約を明記し、運用時の注意点を明確にする
+
+**いつ使われるか:**
+
+- **機能追加時**: 既存環境に「次に読むべき記事」機能を追加する際に、セットアップ手順を確認するとき
+- **データベースマイグレーション実行時**: `next_article_id` カラム追加のマイグレーションを実行する際に、スキーマ変更の詳細を確認するとき
+- **API実装時**: フロントエンド・バックエンド開発者が `nextArticleId` / `nextArticle` フィールドの型定義を確認するとき
+- **機能拡張時**: 「次に読むべき記事」機能を拡張する際に、現在の実装ファイル・制約・注意事項を確認するとき
+- **トラブルシューティング時**: 次の記事が表示されない・選択できないなどの問題が発生したときに、実装詳細を確認するとき
+- **新規メンバーへのオンボーディング**: プロジェクトに参加した開発者が「次に読むべき記事」機能の全体像を素早く把握するとき
+
+**関連ファイル:**
+
+- `.kiro/specs/tech-blog/requirements.md` - 技術ブログ機能の要件定義（この機能の元となる要件）
+- `.kiro/specs/tech-blog/design.md` - 技術ブログ機能の設計書（アーキテクチャ・データモデル）
+- `.kiro/specs/tech-blog/tasks.md` - 技術ブログ機能の実装タスク
+- `packages/backend/prisma/schema.prisma` - Prismaスキーマ（`next_article_id` カラム定義）
+- `packages/backend/prisma/migrations/20260421000000_add_next_article/migration.sql` - マイグレーションSQL
+- `packages/backend/src/domain/entities/article.entity.ts` - Article エンティティ（`nextArticleId` / `nextArticle` フィールド定義）
+- `packages/backend/src/infrastructure/prisma/article.repository.impl.ts` - Article リポジトリ実装（`nextArticle` の取得ロジック）
+- `packages/backend/src/application/usecases/create-article.usecase.ts` - 記事作成ユースケース（`nextArticleId` の保存）
+- `packages/backend/src/application/usecases/update-article.usecase.ts` - 記事更新ユースケース（`nextArticleId` の更新）
+- `packages/shared/src/schemas/article.schema.ts` - Article スキーマ（`nextArticleId` / `nextArticle` フィールド定義）
+- `packages/frontend/src/components/ArticleForm.vue` - 記事フォームコンポーネント（次の記事選択ドロップダウン）
+- `packages/frontend/src/views/ArticleEditView.vue` - 記事編集画面（次の記事設定）
+- `packages/frontend/src/views/ArticleDetailView.vue` - 記事詳細画面（次に読むセクション表示）
+- `docs/MIGRATION_INSTRUCTIONS.md` - マイグレーション実行手順（データベース更新の手順書）
+
+---
+
+### `docs/MIGRATION_INSTRUCTIONS.md`
+
+**何を定義しているか:**
+「次に読むべき記事」機能のデータベースマイグレーション実行手順を定義した運用ドキュメントです。以下の内容が含まれます。
+
+- **マイグレーション実行方法**:
+  - 方法1: Supabase Dashboard から SQL Editor で実行（推奨）
+  - 方法2: psql コマンドラインから実行
+- **実行する SQL**:
+  - `articles` テーブルに `next_article_id` カラム追加（UUID型・NULL許可）
+  - 外部キー制約追加（`articles_next_article_id_fkey`・ON DELETE SET NULL・ON UPDATE CASCADE）
+  - インデックス追加（`idx_articles_next_article_id`）
+  - すべて `IF NOT EXISTS` 句を使用（冪等性を保証）
+- **確認 SQL**:
+  - `next_article_id` カラムの存在確認
+  - インデックスの存在確認
+  - 外部キー制約の存在確認
+- **完了後の手順**:
+  - バックエンドサーバーの再起動
+  - フロントエンドの開発サーバーの再起動
+  - ブラウザキャッシュのクリア（Cmd+Shift+R）
+- **トラブルシューティング**:
+  - 「column "next_article_id" already exists」エラー → 問題なし（既に存在）
+  - 「constraint "articles_next_article_id_fkey" already exists」エラー → 問題なし（既に存在）
+  - 「relation "idx_articles_next_article_id" already exists」エラー → 問題なし（既に存在）
+
+**なぜ存在するか:**
+「次に読むべき記事」機能（`docs/NEXT_ARTICLE_FEATURE.md`）の実装に伴い、データベーススキーマ変更が必要になりました。以下の目的で作成されました:
+
+1. **マイグレーション実行の手順書**: 既存環境（開発環境・本番環境）に「次に読むべき記事」機能を追加する際に、データベース更新の手順を明文化し、開発者・運用チームが迷わずマイグレーションを実行できるようにする
+2. **冪等性の保証**: `IF NOT EXISTS` 句を使用することで、マイグレーションを複数回実行してもエラーにならず、既に適用済みの場合はスキップされることを明示する
+3. **確認手順の提供**: マイグレーション実行後に「正しく適用されたか」を確認する SQL を提供し、開発者が自己確認できるようにする
+4. **トラブルシューティングガイド**: よくあるエラーメッセージ（「already exists」エラー）に対して「問題なし」と明示し、開発者が不安にならないようにする
+5. **完了後の手順の明示**: マイグレーション実行後にアプリケーションを再起動する必要があることを明示し、開発者が忘れずに再起動できるようにする
+6. **Supabase Dashboard 推奨**: Supabase Dashboard の SQL Editor から実行する方法を推奨することで、psql コマンドラインに不慣れな開発者でも GUI で実行できるようにする
+
+**いつ使われるか:**
+
+- **機能追加時**: 既存環境（開発環境・ステージング環境・本番環境）に「次に読むべき記事」機能を追加する際に、データベースマイグレーションを実行するとき
+- **新規環境構築時**: 新しい開発者がプロジェクトに参加し、ローカル環境をセットアップする際に、最新のデータベーススキーマに更新するとき
+- **本番環境デプロイ時**: 本番環境に「次に読むべき記事」機能をデプロイする際に、本番データベースにマイグレーションを適用するとき
+- **トラブルシューティング時**: マイグレーション実行時にエラーが発生し、原因を特定するとき（「already exists」エラーの確認）
+- **確認作業時**: マイグレーションが正しく適用されたかを確認する際に、確認 SQL を実行するとき
+- **ロールバック検討時**: マイグレーションを元に戻す必要がある場合に、どのカラム・制約・インデックスを削除すべきかを確認するとき
+
+**関連ファイル:**
+
+- `docs/NEXT_ARTICLE_FEATURE.md` - 「次に読むべき記事」機能の仕様・使い方・実装詳細（このマイグレーションの目的）
+- `packages/backend/add_next_article.sql` - マイグレーション SQL ファイル（psql コマンドから実行する場合に使用）
+- `packages/backend/prisma/schema.prisma` - Prisma スキーマ（`next_article_id` カラム定義）
+- `packages/backend/prisma/migrations/20260421000000_add_next_article/migration.sql` - Prisma マイグレーションファイル（Prisma Migrate を使用する場合）
+- `.kiro/specs/tech-blog/design.md` - 技術ブログ機能の設計書（データベーススキーマ設計）
+- `docs/AUTHENTICATION_SETUP.md` - 認証機能のセットアップ手順（環境変数設定・データベース接続の参考）
+- `aidlc-docs/construction/supabase/functional-design/business-rules.md` - Supabase パッケージのルール（マイグレーション命名規則・RLS ポリシー）
+- `aidlc-docs/construction/build-and-test/build-instructions.md` - ビルド手順書（Prisma セットアップ・マイグレーション実行の参考）rticleエンティティ（`nextArticleId` / `nextArticle` フィールド追加）
+- `packages/backend/src/infrastructure/prisma/article.repository.impl.ts` - リポジトリ実装（`nextArticle` の取得ロジック）
+- `packages/backend/src/application/usecases/create-article.usecase.ts` - 記事作成ユースケース（`nextArticleId` の保存）
+- `packages/backend/src/application/usecases/update-article.usecase.ts` - 記事更新ユースケース（`nextArticleId` の更新）
+- `packages/shared/src/schemas/article.schema.ts` - スキーマ定義（`nextArticleId` フィールド追加）
+- `packages/frontend/src/components/ArticleForm.vue` - 記事フォーム（次の記事選択ドロップダウン）
+- `packages/frontend/src/views/ArticleEditView.vue` - 記事編集画面（次の記事設定UI）
+- `packages/frontend/src/views/ArticleDetailView.vue` - 記事詳細画面（「次に読む」セクション表示）
+- `docs/TECH_BLOG_API.md` - 技術ブログAPI仕様（記事作成・更新APIの `nextArticleId` パラメータ）
+
+---
+
+### `docs/VERCEL_DEPLOYMENT.md`
+
+**何を定義しているか:**
+技術ブログアプリケーションのフロントエンドとバックエンドを**別々のVercelプロジェクト**としてデプロイする完全な手順・設定・トラブルシューティング・パフォーマンス最適化・コスト管理を定義した包括的な運用ドキュメントです。以下の内容が含まれます。
+
+- **デプロイ戦略**:
+  - フロントエンドとバックエンドを別々のVercelプロジェクトとしてデプロイする理由（独立したスケーリング・明確な責任分離・デプロイの柔軟性・環境変数の管理）
+- **1. バックエンドのデプロイ**:
+  - Vercelプロジェクト作成（プロジェクト名: `tech-blog-backend`）
+  - ビルド設定（Framework Preset: Other / Root Directory: `packages/backend` / Build Command: `pnpm install && pnpm --filter @monorepo/backend db:generate` / Output Directory: 空欄（Serverless Functions使用））
+  - 環境変数設定（`NODE_ENV` / `SUPABASE_URL` / `SUPABASE_ANON_KEY` / `SUPABASE_SERVICE_ROLE_KEY` / `DATABASE_URL`（Pooler URL・ポート6543） / `DIRECT_URL`（Direct URL・ポート5432） / `CORS_ORIGIN` / `RATE_LIMIT_MAX` / `AUTH_RATE_LIMIT_MAX`）
+  - Supabase接続情報の取得方法（Supabase Dashboard → Project Settings → Database → Connection string → Transaction mode（Pooler）→ `DATABASE_URL` / Direct connection → `DIRECT_URL`）
+  - 動作確認（`curl https://tech-blog-backend.vercel.app/health` → `{"status":"ok"}`）
+- **2. フロントエンドのデプロイ**:
+  - Vercelプロジェクト作成（同じGitHubリポジトリを再度選択・プロジェクト名: `tech-blog-frontend`）
+  - ビルド設定（Framework Preset: Other / Root Directory: `./`（モノレポのルート） / Build Command: `pnpm build:frontend` / Output Directory: `packages/frontend/dist` / Install Command: `pnpm install`）
+  - 環境変数設定（`VITE_API_BASE_URL`（バックエンドURL） / `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY`）
+- **3. CORS設定の更新**:
+  - バックエンドの環境変数`CORS_ORIGIN`をフロントエンドURLに更新（`https://tech-blog-frontend.vercel.app` / 複数オリジン許可: `https://tech-blog-frontend.vercel.app,https://tech-blog-frontend-*.vercel.app`）
+  - バックエンドの再デプロイ（Deployments → "..." → "Redeploy"）
+- **4. 動作確認**:
+  - フロントエンド確認（ログインページ表示・記事一覧表示）
+  - バックエンド確認（`curl https://tech-blog-backend.vercel.app/api/articles` / 認証が必要なエンドポイントのテスト）
+- **自動デプロイ**:
+  - Production環境（`main`ブランチへのプッシュで両プロジェクトが自動デプロイ）
+  - Preview環境（プルリクエストの作成・更新で各プロジェクトにプレビューデプロイメント作成・URL: `https://tech-blog-frontend-git-branch-name.vercel.app`）
+- **Vercel CLIテスト**:
+  - インストール（`npm i -g vercel`）
+  - ログイン（`vercel login`）
+  - バックエンドのテスト（`cd packages/backend` → `vercel dev`）
+  - フロントエンドのテスト（ルートディレクトリで `vercel dev`）
+  - デプロイ（プレビュー環境: `vercel` / 本番環境: `vercel --prod`）
+- **トラブルシューティング**:
+  - バックエンド: "Module not found" エラー → Prisma Clientが生成されていない → Build Commandに`db:generate`が含まれているか確認・環境変数`DATABASE_URL`と`DIRECT_URL`が正しく設定されているか確認
+  - バックエンド: データベース接続エラー → DATABASE_URLの設定が間違っている → Supabase Dashboardで接続文字列を再確認・`DATABASE_URL`にはPooler URL（ポート6543）を使用・`DIRECT_URL`にはDirect URL（ポート5432）を使用・`?pgbouncer=true`パラメータが`DATABASE_URL`に含まれているか確認
+  - バックエンド: "Function timeout" エラー → Serverless Functionの実行時間が10秒を超えた → データベースクエリを最適化・不要な処理を削除・Vercel Proプランにアップグレード（タイムアウト60秒）
+  - フロントエンド: APIリクエストが失敗する → CORS設定が正しくない → バックエンドの`CORS_ORIGIN`にフロントエンドのURLが含まれているか確認・ブラウザの開発者ツールでCORSエラーを確認・バックエンドを再デプロイ
+  - フロントエンド: 環境変数が反映されない → 環境変数の変更後に再ビルドしていない → 環境変数名が`VITE_`プレフィックスで始まっているか確認・Vercel Dashboardで環境変数を確認・再デプロイを実行
+  - SPAルーティングが動作しない → リライトルールが設定されていない → ルートの`vercel.json`に`{ "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }`が含まれているか確認
+- **パフォーマンス最適化**:
+  - Vercelの自動最適化（CDNによるグローバル配信・自動画像最適化・エッジキャッシング・Gzip/Brotli圧縮）
+  - フロントエンド追加最適化（コード分割: Vue Routerの遅延ローディング / 画像最適化: WebP形式 / キャッシング: 静的アセットに長期キャッシュ）
+  - バックエンド追加最適化（コールドスタート対策: 不要な依存関係削除・初期化処理最小化・アプリケーションインスタンス再利用（`api/index.ts`で実装済み） / データベースクエリ最適化: インデックス設定・N+1問題回避・Prismaクエリ最適化 / レスポンスキャッシング: 頻繁にアクセスされるデータをキャッシュ・Vercel Edge Cache活用）
+- **セキュリティ考慮事項**:
+  - フロントエンド（環境変数に機密情報を含めない（ビルド時にバンドルされる）・Supabase Anon Keyは公開されても安全（RLSで保護）・APIキーは使用しない）
+  - バックエンド（`SUPABASE_SERVICE_ROLE_KEY`は環境変数で管理・CORS設定を適切に制限・レート制限を有効化・Helmetでセキュリティヘッダーを設定・入力値のバリデーション（Zodで実装済み））
+  - データベース（Row Level Security（RLS）を有効化・最小権限の原則を適用・接続文字列を環境変数で管理）
+- **モニタリング**:
+  - Vercel Dashboard（各プロジェクトで Deployments: デプロイメント履歴 / Functions: Serverless Functionsの実行ログ（バックエンドのみ） / Analytics: トラフィック分析（Pro以上） / Logs: リアルタイムログ（Pro以上））
+  - Supabase Dashboard（Database: クエリパフォーマンス / Storage: ストレージ使用量 / Auth: 認証ログ / Logs: APIログ）
+- **コスト管理**:
+  - Vercel無料プラン（帯域幅: 100GB/月 / Serverless Functions実行時間: 100時間/月 / ビルド時間: 6,000分/月）
+  - 使用量の確認（Vercel Dashboard → Settings → Usage → 各メトリクスの使用状況を確認）
+  - コスト削減のヒント（画像を最適化してサイズを削減・不要なAPIリクエストを削減・キャッシングを活用・Serverless Functionsの実行時間を最適化）
+- **環境別の設定**:
+  - Development（フロントエンド: `VITE_API_BASE_URL=http://localhost:3000` / バックエンド: `CORS_ORIGIN=http://localhost:5173`）
+  - Preview（Vercelが自動的にプレビューURLを生成・環境変数は本番と同じ設定を使用するか、Preview専用の値を設定可能）
+  - Production（本番環境の環境変数を使用）
+- **よくある質問**:
+  - Q: モノレポで1つのプロジェクトとしてデプロイできますか？ → A: 技術的には可能ですが、推奨しません。別々のプロジェクトとしてデプロイする方が、管理が簡単で柔軟性が高いです。
+  - Q: バックエンドのServerless Functionsは常に起動していますか？ → A: いいえ。リクエストがあるときのみ起動します（コールドスタート）。頻繁にアクセスされる場合は、インスタンスが再利用されます。
+  - Q: データベースマイグレーションはどうすればいいですか？ → A: ローカルまたはCI/CDパイプラインで実行してください。Vercel Serverless Functionsでは実行しないでください。（`cd packages/backend` → `pnpm db:migrate`）
+  - Q: 複数の環境（staging、production）を管理できますか？ → A: はい。Vercelプロジェクトを複数作成するか、環境変数で環境を切り替えることができます。
+  - Q: カスタムドメインを使用できますか？ → A: はい。Vercel Dashboard → Settings → Domains でカスタムドメインを追加できます。
+- **参考リンク**:
+  - Vercel Documentation / Vercel CLI / Environment Variables / Monorepo Support / Serverless Functions / Supabase + Vercel
+
+**なぜ存在するか:**
+技術ブログ機能（`.kiro/specs/tech-blog/`）の実装が完了し、ローカル環境での動作確認が完了した後、以下の目的で作成されました:
+
+1. **フロントエンドとバックエンドの別々デプロイ戦略の明文化**: モノレポ構成でフロントエンドとバックエンドを**別々のVercelプロジェクト**としてデプロイする理由（独立したスケーリング・明確な責任分離・デプロイの柔軟性・環境変数の管理）を説明し、開発者が適切なデプロイ戦略を理解できるようにする
+2. **バックエンドのServerless Functions化の手順書**: FastifyアプリケーションをVercel Serverless Functionsとしてデプロイする完全な手順を提供する。特にモノレポ構成でのバックエンド設定（Root Directory: `packages/backend` / Build Command: `pnpm install && pnpm --filter @monorepo/backend db:generate` / Output Directory: 空欄）を明示することで、設定ミスを防ぐ
+3. **Supabase接続情報の取得方法の明示**: `DATABASE_URL`（Pooler URL・ポート6543・`?pgbouncer=true`パラメータ付き）と`DIRECT_URL`（Direct URL・ポート5432）の違いを説明し、Supabase Dashboardでの取得方法（Project Settings → Database → Connection string → Transaction mode / Direct connection）を明示することで、データベース接続エラーを防ぐ
+4. **CORS設定の更新フローの明確化**: フロントエンドデプロイ完了後にバックエンドの`CORS_ORIGIN`環境変数を更新し、バックエンドを再デプロイする必要があることを明示する。この手順を忘れるとAPIリクエストがCORSエラーで失敗するため、重要な手順として強調する
+5. **包括的なトラブルシューティングの提供**: バックエンド（"Module not found"・データベース接続エラー・"Function timeout"）とフロントエンド（APIリクエスト失敗・環境変数が反映されない・SPAルーティングが動作しない）の両方のトラブルシューティングを一箇所にまとめ、問題が発生したときに素早く解決できるようにする
+6. **パフォーマンス最適化の具体的な提案**: Vercelの自動最適化に加えて、バックエンドのコールドスタート対策（不要な依存関係削除・初期化処理最小化・アプリケーションインスタンス再利用）・データベースクエリ最適化（インデックス設定・N+1問題回避）・レスポンスキャッシング（Vercel Edge Cache活用）という具体的な最適化手法を提案する
+7. **セキュリティ対策の3層での明文化**: フロントエンド（環境変数に機密情報を含めない）・バックエンド（`SUPABASE_SERVICE_ROLE_KEY`は環境変数で管理・CORS設定を適切に制限・レート制限を有効化・Helmetでセキュリティヘッダーを設定）・データベース（Row Level Security（RLS）を有効化・最小権限の原則を適用）という3層でのセキュリティ対策を明示する
+8. **コスト管理の提供**: Vercel無料プランの制限（帯域幅: 100GB/月・Serverless Functions実行時間: 100時間/月・ビルド時間: 6,000分/月）を明示し、使用量の確認方法（Vercel Dashboard → Settings → Usage）とコスト削減のヒント（画像最適化・不要なAPIリクエスト削減・キャッシング活用・Serverless Functions実行時間最適化）を提供する
+9. **よくある質問の集約**: モノレポで1つのプロジェクトとしてデプロイできるか・Serverless Functionsは常に起動しているか・データベースマイグレーションはどうすればいいか・複数の環境を管理できるか・カスタムドメインを使用できるかという5つのよくある質問に対する回答を提供し、開発者の疑問を解消する
+
+**いつ使われるか:**
+
+- **本番環境デプロイ時**: 技術ブログアプリケーションを本番環境にデプロイする際に、バックエンドとフロントエンドの両方のVercelプロジェクト作成・設定・環境変数設定・CORS設定更新の手順を確認するとき（最優先で参照するドキュメント）
+- **ステージング環境構築時**: プレビュー環境やステージング環境をVercelに構築する際に、環境変数の設定方法（Development / Preview / Production）を確認するとき
+- **トラブルシューティング時**: Vercelデプロイ時にバックエンドのビルドエラー（"Module not found"）・データベース接続エラー・"Function timeout"エラー・フロントエンドのAPIリクエスト失敗（CORSエラー）・環境変数エラー・ルーティングエラーが発生したときに、原因と解決策を確認するとき
+- **パフォーマンス改善時**: アプリケーションのパフォーマンスを改善する際に、バックエンドのコールドスタート対策・データベースクエリ最適化・レスポンスキャッシング・フロントエンドのコード分割・画像最適化を確認するとき
+- **コスト管理時**: Vercel無料プランの使用量を確認し、制限を超えないようにコスト削減のヒント（画像最適化・不要なAPIリクエスト削減・キャッシング活用）を実施するとき
+- **セキュリティ監査時**: フロントエンド・バックエンド・データベースの3層でのセキュリティ対策（環境変数管理・CORS設定・レート制限・Helmet・RLS・最小権限）を確認するとき
+- **データベースマイグレーション実行時**: ローカルまたはCI/CDパイプラインでマイグレーションを実行する際に、Vercel Serverless Functionsでは実行しないという注意事項を確認するとき
+- **新規メンバーへのオンボーディング**: プロジェクトに参加した開発者が、本番環境のデプロイ方法（フロントエンドとバックエンドの別々デプロイ戦略）を理解するとき
+
+**関連ファイル:**
+
+- `.kiro/specs/tech-blog/requirements.md` - 技術ブログ機能の要件定義（このデプロイガイドの元となる要件）
+- `.kiro/specs/tech-blog/design.md` - 技術ブログ機能の設計書（フロントエンドアーキテクチャ・Vue 3 + Vite構成）
+- `.kiro/specs/tech-blog/tasks.md` - 実装タスク一覧（Phase 10: Frontend — Views層でデプロイ対象のコンポーネント実装）
+- `packages/frontend/package.json` - フロントエンドのビルドスクリプト（`pnpm build:frontend`の定義）
+- `packages/frontend/vite.config.ts` - Viteビルド設定（出力ディレクトリ`dist`の定義）
+- `packages/frontend/.env.example` - フロントエンド環境変数のテンプレート（Vercelで設定する環境変数の参考）
+- `packages/frontend/src/router/index.ts` - Vue Routerの設定（SPAルーティング・`vercel.json`のリライトルールと関連）
+- `.github/workflows/deploy.yml` - GitHub Actionsデプロイワークフロー（Vercelの自動デプロイと連携）
+- `aidlc-docs/construction/ci-cd/code/summary.md` - CI/CDユニットの成果物一覧（GitHub Actionsワークフロー・デプロイ前に必要な作業）
+- `aidlc-docs/construction/frontend/code/summary.md` - フロントエンドユニットの成果物一覧（Vercelにデプロイされるファイル）
+- `aidlc-docs/construction/build-and-test/build-instructions.md` - ビルド手順書（ローカルでのビルド確認・Vercelビルドの参考）
+- `docs/QUICK_START.md` - クイックスタートガイド（ローカル環境セットアップ・Vercelデプロイ前の動作確認）
+- `docs/AUTHENTICATION_SETUP.md` - 認証機能のセットアップ手順（Vercelの環境変数`VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY`の設定参考）
+- `README.md` - プロジェクト全体の説明書（デプロイ手順へのリンクを含む可能性）
+
+---
+
 ## 第9章: クイックスタートガイド
 
 ---

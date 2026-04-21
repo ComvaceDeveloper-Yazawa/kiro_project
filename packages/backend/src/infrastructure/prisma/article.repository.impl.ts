@@ -21,12 +21,19 @@ export class ArticleRepositoryImpl implements ArticleRepository {
           content: article.content,
           is_published: article.isPublished,
           published_at: article.publishedAt,
+          next_article_id: article.nextArticleId,
           updated_at: article.updatedAt,
         },
         include: {
           article_tags: {
             include: {
               tags: true,
+            },
+          },
+          next_article: {
+            select: {
+              id: true,
+              title: true,
             },
           },
         },
@@ -49,6 +56,8 @@ export class ArticleRepositoryImpl implements ArticleRepository {
         updated.created_at,
         updated.updated_at,
         tags,
+        updated.next_article_id,
+        updated.next_article,
       );
     } else {
       // 新規作成
@@ -60,8 +69,17 @@ export class ArticleRepositoryImpl implements ArticleRepository {
           author_id: article.authorId,
           is_published: article.isPublished,
           published_at: article.publishedAt,
+          next_article_id: article.nextArticleId,
           created_at: article.createdAt,
           updated_at: article.updatedAt,
+        },
+        include: {
+          next_article: {
+            select: {
+              id: true,
+              title: true,
+            },
+          },
         },
       });
 
@@ -78,6 +96,8 @@ export class ArticleRepositoryImpl implements ArticleRepository {
         created.created_at,
         created.updated_at,
         article.tags,
+        created.next_article_id,
+        created.next_article,
       );
     }
   }
@@ -89,6 +109,12 @@ export class ArticleRepositoryImpl implements ArticleRepository {
         article_tags: {
           include: {
             tags: true,
+          },
+        },
+        next_article: {
+          select: {
+            id: true,
+            title: true,
           },
         },
       },
@@ -110,6 +136,8 @@ export class ArticleRepositoryImpl implements ArticleRepository {
       article.created_at,
       article.updated_at,
       tags,
+      article.next_article_id,
+      article.next_article,
     );
   }
 
@@ -155,6 +183,7 @@ export class ArticleRepositoryImpl implements ArticleRepository {
           article.created_at,
           article.updated_at,
           tags,
+          article.next_article_id,
         );
       }),
       total,
@@ -200,6 +229,7 @@ export class ArticleRepositoryImpl implements ArticleRepository {
           article.created_at,
           article.updated_at,
           tags,
+          article.next_article_id,
         );
       }),
       total,
@@ -269,6 +299,7 @@ export class ArticleRepositoryImpl implements ArticleRepository {
           article.created_at,
           article.updated_at,
           tags,
+          article.next_article_id,
         );
       }),
       total,

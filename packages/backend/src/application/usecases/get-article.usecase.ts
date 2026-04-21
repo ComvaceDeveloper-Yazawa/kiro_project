@@ -12,7 +12,7 @@ export class GetArticleUsecase {
   constructor(private readonly articleRepository: ArticleRepository) {}
 
   async execute(input: GetArticleInput): Promise<Article> {
-    // 記事の取得
+    // 記事の取得（次の記事情報も含む）
     const article = await this.articleRepository.findById(input.articleId);
     if (!article) {
       throw new NotFoundError('記事', input.articleId);

@@ -11,6 +11,7 @@ export interface UpdateArticleInput {
   title: string;
   content: string;
   tags: string[];
+  nextArticleId?: string | null;
 }
 
 export class UpdateArticleUsecase {
@@ -56,7 +57,7 @@ export class UpdateArticleUsecase {
     );
 
     // 記事更新
-    article.update(input.title.trim(), input.content, tags);
+    article.update(input.title.trim(), input.content, tags, input.nextArticleId ?? null);
 
     // 保存
     return this.articleRepository.save(article);

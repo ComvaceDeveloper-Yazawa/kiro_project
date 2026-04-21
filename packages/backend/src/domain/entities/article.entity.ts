@@ -12,9 +12,17 @@ export class Article {
     public readonly createdAt: Date,
     public updatedAt: Date,
     public tags: Tag[],
+    public nextArticleId: string | null = null,
+    public nextArticle?: { id: string; title: string } | null,
   ) {}
 
-  static create(title: string, content: string, authorId: string, tags: Tag[] = []): Article {
+  static create(
+    title: string,
+    content: string,
+    authorId: string,
+    tags: Tag[] = [],
+    nextArticleId: string | null = null,
+  ): Article {
     const now = new Date();
     return new Article(
       randomUUID(),
@@ -26,6 +34,7 @@ export class Article {
       now,
       now,
       tags,
+      nextArticleId,
     );
   }
 
@@ -47,10 +56,11 @@ export class Article {
     this.updatedAt = new Date();
   }
 
-  update(title: string, content: string, tags: Tag[]): void {
+  update(title: string, content: string, tags: Tag[], nextArticleId: string | null = null): void {
     this.title = title;
     this.content = content;
     this.tags = tags;
+    this.nextArticleId = nextArticleId;
     this.updatedAt = new Date();
   }
 

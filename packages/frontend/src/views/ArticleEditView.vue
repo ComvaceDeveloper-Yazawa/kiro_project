@@ -18,7 +18,9 @@
           title: article.title,
           content: article.content,
           tags: article.tags.map((tag) => tag.name),
+          nextArticleId: article.nextArticleId,
         }"
+        :available-articles="availableArticles"
         submit-label="更新"
         :loading="loading"
         :enable-auto-save="true"
@@ -53,18 +55,33 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useArticle } from '../composables/useArticle';
+import { useArticleApi } from '../composables/useArticleApi';
 import ArticleForm from '../components/ArticleForm.vue';
 import type { UpdateArticleInput } from '@monorepo/shared';
 
 const route = useRoute();
 const router = useRouter();
 const { article, loading, error, load, update, publish, unpublish } = useArticle();
+const api = useArticleApi();
 
 const articleId = route.params.id as string;
 const loadingArticle = ref(true);
+const availableArticles = ref<Array<{ id: string; title: string }>>([]);
+
+// 現在の記事以外の記事リストを取得
+const loadAvailableArticles = async () => {
+  try {
+    const result = await api.listMyArticles(1, 100); // 最大100件取得
+    availableArticles.value = result.articles
+      .filter((a) => a.id !== articleId) // 現在の記事を除外
+      .map((a) => ({ id: a.id, title: a.title }));
+  } catch (e) {
+    console.error('記事一覧の取得に失敗:', e);
+  }
+};
 
 const handleSubmit = async (data: UpdateArticleInput) => {
   try {
@@ -117,7 +134,7 @@ const handleCancel = () => {
 
 onMounted(async () => {
   try {
-    await load(articleId);
+    await Promise.all([load(articleId), loadAvailableArticles()]);
   } finally {
     loadingArticle.value = false;
   }
@@ -127,7 +144,7 @@ onMounted(async () => {
 <style scoped>
 .article-edit-view {
   min-height: 100vh;
-  background: #ffffff;
+  background: var(--color-background);
   position: relative;
 }
 
@@ -137,14 +154,14 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  color: #6b7280;
+  color: var(--color-text-muted);
 }
 
 .article-edit-view__spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid #e5e7eb;
-  border-top-color: #3b82f6;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin-bottom: 1rem;
@@ -167,24 +184,24 @@ onMounted(async () => {
 }
 
 .article-edit-view__error p {
-  color: #dc2626;
+  color: var(--color-error);
   font-size: 1.125rem;
   margin-bottom: 1.5rem;
 }
 
 .article-edit-view__error-button {
   padding: 0.75rem 1.5rem;
-  background: #3b82f6;
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-secondary);
   border: none;
   border-radius: 0.5rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s;
 }
 
 .article-edit-view__error-button:hover {
-  background: #2563eb;
+  opacity: 0.9;
 }
 
 /* フローティングアクションボタン */

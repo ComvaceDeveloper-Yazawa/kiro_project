@@ -167,7 +167,7 @@ const insertCodeBlock = () => insertText('```javascript\n', '\n```', 'コード�
   gap: 0.25rem;
   padding: 0.75rem 0;
   background: transparent;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--color-border);
   margin-bottom: 1rem;
   flex-wrap: wrap;
 }
@@ -175,12 +175,12 @@ const insertCodeBlock = () => insertText('```javascript\n', '\n```', 'コード�
 .markdown-editor__button {
   padding: 0.5rem 0.75rem;
   background: transparent;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-border);
   border-radius: 0.375rem;
   cursor: pointer;
   font-size: 0.875rem;
   transition: all 0.2s;
-  color: #6b7280;
+  color: var(--color-text-muted);
   min-width: 36px;
   display: flex;
   align-items: center;
@@ -188,13 +188,13 @@ const insertCodeBlock = () => insertText('```javascript\n', '\n```', 'コード�
 }
 
 .markdown-editor__button:hover {
-  background: #f9fafb;
-  border-color: #d1d5db;
-  color: #111827;
+  background: var(--color-surface);
+  border-color: var(--color-primary);
+  color: var(--color-text);
 }
 
 .markdown-editor__button:active {
-  background: #f3f4f6;
+  background: var(--color-background);
 }
 
 .markdown-editor__textarea {
@@ -207,7 +207,7 @@ const insertCodeBlock = () => insertText('```javascript\n', '\n```', 'コード�
   font-size: 1rem;
   line-height: 1.75;
   resize: vertical;
-  color: #111827;
+  color: var(--color-text);
   background: transparent;
 }
 
@@ -216,7 +216,8 @@ const insertCodeBlock = () => insertText('```javascript\n', '\n```', 'コード�
 }
 
 .markdown-editor__textarea::placeholder {
-  color: #d1d5db;
+  color: var(--color-text-muted);
+  opacity: 0.5;
 }
 
 /* コードブロック風のフォント */

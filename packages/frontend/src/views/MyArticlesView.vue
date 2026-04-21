@@ -80,9 +80,11 @@ onMounted(() => {
 
 <style scoped>
 .my-articles-view {
-  max-width: 1200px;
+  max-width: 1600px;
+  width: 100%;
   margin: 0 auto;
   padding: 2rem;
+  box-sizing: border-box;
 }
 
 .my-articles-view h1 {
@@ -107,6 +109,8 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 100%;
+  max-width: 100%;
 }
 
 .my-articles-view__pagination {

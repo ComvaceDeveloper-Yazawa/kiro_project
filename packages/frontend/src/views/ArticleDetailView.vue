@@ -28,6 +28,33 @@
         <MarkdownPreview :markdown="article.content" />
       </div>
 
+      <!-- 次に読む記事 -->
+      <div v-if="article.nextArticle" class="article-detail-view__next-article">
+        <h3 class="article-detail-view__next-article-title">次に読む</h3>
+        <router-link
+          :to="`/articles/${article.nextArticle.id}`"
+          class="article-detail-view__next-article-link"
+        >
+          <div class="article-detail-view__next-article-card">
+            <span class="article-detail-view__next-article-label">次の記事</span>
+            <h4 class="article-detail-view__next-article-name">{{ article.nextArticle.title }}</h4>
+            <svg
+              class="article-detail-view__next-article-icon"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 7l5 5m0 0l-5 5m5-5H6"
+              />
+            </svg>
+          </div>
+        </router-link>
+      </div>
+
       <footer class="article-detail-view__footer">
         <router-link to="/articles" class="article-detail-view__back-button">
           一覧に戻る
@@ -50,18 +77,18 @@
 import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useArticle } from '../composables/useArticle';
+import { useAuthStore } from '../stores/useAuthStore';
 import MarkdownPreview from '../components/MarkdownPreview.vue';
 
 const route = useRoute();
 const router = useRouter();
+const authStore = useAuthStore();
 const { article, loading, error, load, remove } = useArticle();
 
 const articleId = route.params.id as string;
 
-// TODO: 実際の認証実装後に置き換え
-const currentUserId = ref<string | null>(null);
 const isAuthor = computed(() => {
-  return article.value && currentUserId.value === article.value.authorId;
+  return article.value && authStore.user?.id === article.value.authorId;
 });
 
 const formatDate = (date: Date | string): string => {
@@ -91,9 +118,11 @@ onMounted(() => {
 
 <style scoped>
 .article-detail-view {
-  max-width: 800px;
+  max-width: 1600px;
+  width: 100%;
   margin: 0 auto;
   padding: 2rem;
+  box-sizing: border-box;
 }
 
 .article-detail-view__loading,
@@ -103,13 +132,14 @@ onMounted(() => {
 }
 
 .article-detail-view__error {
-  color: #dc2626;
+  color: var(--color-error);
 }
 
 .article-detail-view__header {
   margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--color-border);
+  width: 100%;
 }
 
 .article-detail-view__header h1 {
@@ -122,7 +152,7 @@ onMounted(() => {
   display: flex;
   gap: 1rem;
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--color-text-muted);
   margin-bottom: 1rem;
 }
 
@@ -142,28 +172,98 @@ onMounted(() => {
 
 .article-detail-view__content {
   margin-bottom: 2rem;
+  width: 100%;
+}
+
+.article-detail-view__next-article {
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  width: 100%;
+}
+
+.article-detail-view__next-article-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+}
+
+.article-detail-view__next-article-link {
+  text-decoration: none;
+  display: block;
+}
+
+.article-detail-view__next-article-card {
+  position: relative;
+  padding: 1.5rem;
+  background: var(--color-background);
+  border: 2px solid var(--color-border);
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.article-detail-view__next-article-card:hover {
+  border-color: var(--color-primary);
+  transform: translateX(4px);
+}
+
+.article-detail-view__next-article-label {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.article-detail-view__next-article-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.article-detail-view__next-article-icon {
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  color: var(--color-primary);
+}
+
+.article-detail-view__article {
+  width: 100%;
+  max-width: 100%;
 }
 
 .article-detail-view__footer {
   display: flex;
   justify-content: space-between;
   padding-top: 2rem;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--color-border);
+  width: 100%;
 }
 
 .article-detail-view__back-button,
 .article-detail-view__edit-button {
   padding: 0.75rem 1.5rem;
-  background: #f3f4f6;
-  color: #1f2937;
+  background: var(--color-surface);
+  color: var(--color-text);
   text-decoration: none;
   border-radius: 0.5rem;
   font-weight: 600;
+  border: 1px solid var(--color-border);
+  transition: all 0.2s;
 }
 
 .article-detail-view__back-button:hover,
 .article-detail-view__edit-button:hover {
-  background: #e5e7eb;
+  background: var(--color-border);
 }
 
 .article-detail-view__actions {
@@ -173,15 +273,16 @@ onMounted(() => {
 
 .article-detail-view__delete-button {
   padding: 0.75rem 1.5rem;
-  background: #dc2626;
+  background: var(--color-error);
   color: white;
   border: none;
   border-radius: 0.5rem;
   font-weight: 600;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
 .article-detail-view__delete-button:hover {
-  background: #b91c1c;
+  opacity: 0.9;
 }
 </style>

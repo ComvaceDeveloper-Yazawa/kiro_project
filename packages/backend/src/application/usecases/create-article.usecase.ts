@@ -9,6 +9,7 @@ export interface CreateArticleInput {
   authorId: string;
   tags: string[];
   isPublished?: boolean; // 公開するかどうか（デフォルト: false）
+  nextArticleId?: string | null; // 次に読むべき記事のID
 }
 
 export class CreateArticleUsecase {
@@ -43,7 +44,13 @@ export class CreateArticleUsecase {
     );
 
     // 記事エンティティ作成
-    const article = Article.create(input.title.trim(), input.content, input.authorId, tags);
+    const article = Article.create(
+      input.title.trim(),
+      input.content,
+      input.authorId,
+      tags,
+      input.nextArticleId ?? null,
+    );
 
     // 公開フラグが指定されている場合は公開
     if (input.isPublished) {

@@ -261,7 +261,7 @@ onMounted(() => {
   }
 
   &__container {
-    max-width: 1280px;
+    max-width: 1600px;
     margin: 0 auto;
     padding: $space-8 $space-4;
   }
@@ -270,6 +270,7 @@ onMounted(() => {
     display: grid;
     grid-template-columns: 280px 1fr;
     gap: $space-8;
+    align-items: start;
 
     @media (max-width: 1023px) {
       grid-template-columns: 1fr;
@@ -351,6 +352,9 @@ onMounted(() => {
   }
 
   &__main {
+    min-width: 0;
+    width: 100%;
+
     @media (max-width: 1023px) {
       order: 1;
     }

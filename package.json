@@ -2,6 +2,7 @@
   "name": "monorepo",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@9.0.0",
   "engines": {
     "node": ">=20",
     "pnpm": ">=9"
@@ -10,6 +11,7 @@
     "dev:backend": "pnpm --filter @monorepo/backend dev",
     "dev:frontend": "pnpm --filter @monorepo/frontend dev",
     "build": "pnpm --filter @monorepo/shared build && pnpm --filter @monorepo/backend build && pnpm --filter @monorepo/frontend build",
+    "build:frontend": "pnpm --filter @monorepo/shared build && pnpm --filter @monorepo/frontend build",
     "test": "pnpm --filter @monorepo/shared test && pnpm --filter @monorepo/backend test && pnpm --filter @monorepo/frontend test",
     "test:all": "vitest --workspace vitest.workspace.ts --run",
     "test:coverage": "vitest --workspace vitest.workspace.ts --run --coverage",
