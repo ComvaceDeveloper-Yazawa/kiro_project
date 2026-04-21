@@ -3,10 +3,25 @@ import { defineStore } from 'pinia';
 import { createClient } from '@supabase/supabase-js';
 import type { User, Session } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY,
-);
+// 環境変数のデバッグ（本番環境でも確認できるように）
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+console.log('🔍 Supabase環境変数チェック:', {
+  url: supabaseUrl ? '✅ 設定済み' : '❌ 未設定',
+  key: supabaseAnonKey ? '✅ 設定済み' : '❌ 未設定',
+  urlValue: supabaseUrl,
+  // keyは最初の20文字のみ表示（セキュリティのため）
+  keyPreview: supabaseAnonKey ? supabaseAnonKey.substring(0, 20) + '...' : 'なし',
+});
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('❌ Supabase環境変数が設定されていません！');
+  console.error('VITE_SUPABASE_URL:', supabaseUrl);
+  console.error('VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? '設定済み' : '未設定');
+}
+
+const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '');
 
 /**
  * 認証ストア（Pinia Setup 記法）
