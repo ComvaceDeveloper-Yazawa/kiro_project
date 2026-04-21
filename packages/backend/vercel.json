@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd packages/backend && pnpm vercel-build",
+  "installCommand": "pnpm install --prod=false",
+  "devCommand": "cd packages/backend && pnpm dev"
+}
