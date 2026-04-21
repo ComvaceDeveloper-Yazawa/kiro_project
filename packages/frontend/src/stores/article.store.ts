@@ -36,7 +36,7 @@ export const useArticleStore = defineStore('article', {
     },
 
     articlesByTag: (state) => (tagName: string) => {
-      return state.articles.filter((article) => article.tags.includes(tagName));
+      return state.articles.filter((article) => article.tags.some((tag) => tag.name === tagName));
     },
   },
 

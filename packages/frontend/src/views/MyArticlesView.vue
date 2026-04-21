@@ -59,7 +59,7 @@ const loadArticles = async () => {
 
   try {
     const result = await api.listMyArticles(pagination.value.page, pagination.value.limit);
-    articles.value = result.articles;
+    articles.value = result.data;
     pagination.value = result.pagination;
   } catch (e) {
     error.value = e instanceof Error ? e.message : '記事の取得に失敗しました';

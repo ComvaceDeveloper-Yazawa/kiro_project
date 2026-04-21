@@ -75,9 +75,9 @@ const availableArticles = ref<Array<{ id: string; title: string }>>([]);
 const loadAvailableArticles = async () => {
   try {
     const result = await api.listMyArticles(1, 100); // 最大100件取得
-    availableArticles.value = result.articles
-      .filter((a) => a.id !== articleId) // 現在の記事を除外
-      .map((a) => ({ id: a.id, title: a.title }));
+    availableArticles.value = result.data
+      .filter((a: { id: string; title: string }) => a.id !== articleId) // 現在の記事を除外
+      .map((a: { id: string; title: string }) => ({ id: a.id, title: a.title }));
   } catch (e) {
     console.error('記事一覧の取得に失敗:', e);
   }

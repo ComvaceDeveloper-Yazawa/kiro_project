@@ -19,14 +19,24 @@ import type { CreateArticleInput } from '@monorepo/shared';
 const router = useRouter();
 const { loading, create } = useArticle();
 
-const handleSubmit = async (data: CreateArticleInput) => {
+interface FormDataWithPublish {
+  title: string;
+  content: string;
+  tags: string[];
+  coverImage?: string | undefined;
+  nextArticleId?: string | null | undefined;
+  isPublished?: boolean;
+}
+
+const handleSubmit = async (data: FormDataWithPublish) => {
   try {
     // 公開フラグを追加して記事を作成
-    const payload = {
+    const payload: CreateArticleInput = {
       title: data.title,
       content: data.content,
       tags: data.tags || [],
       isPublished: true,
+      nextArticleId: data.nextArticleId ?? undefined,
     };
     console.log('📤 記事作成リクエスト:', payload);
     const article = await create(payload);

@@ -93,7 +93,10 @@
         </div>
 
         <!-- 次に読む記事 -->
-        <div v-if="availableArticles.length > 0" class="article-form__meta-item">
+        <div
+          v-if="availableArticles && availableArticles.length > 0"
+          class="article-form__meta-item"
+        >
           <label for="nextArticle" class="article-form__meta-label">
             <ArrowRightCircleIcon class="article-form__icon" />
             次に読む記事
@@ -194,8 +197,8 @@ interface FormData {
   title: string;
   content: string;
   tags: string[];
-  coverImage?: string;
-  nextArticleId?: string | null;
+  coverImage?: string | undefined;
+  nextArticleId?: string | null | undefined;
 }
 
 interface Props {
@@ -238,7 +241,7 @@ const autoSaving = ref(false);
 const lastSaved = ref<string>('');
 const autoSaveTimer = ref<number | null>(null);
 
-const { uploadImage, uploading } = useImageUpload();
+const { uploadImage, loading: uploadingImage } = useImageUpload();
 
 const validate = (): boolean => {
   Object.keys(errors).forEach((key) => delete errors[key]);
@@ -264,7 +267,13 @@ const validate = (): boolean => {
 
 const handleSubmit = () => {
   if (!validate()) return;
-  emit('submit', { ...formData });
+  emit('submit', {
+    title: formData.title,
+    content: formData.content,
+    tags: formData.tags,
+    coverImage: formData.coverImage ?? undefined,
+    nextArticleId: formData.nextArticleId ?? null,
+  });
 };
 
 const handleCancel = () => {
@@ -306,7 +315,7 @@ const handleCoverUpload = async (event: Event) => {
 };
 
 const removeCoverImage = () => {
-  formData.coverImage = undefined;
+  formData.coverImage = undefined as string | undefined;
   showCoverUpload.value = false;
 };
 
