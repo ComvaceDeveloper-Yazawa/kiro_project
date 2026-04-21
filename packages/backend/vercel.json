@@ -1,7 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "cd ../.. && pnpm install && pnpm --filter @monorepo/shared build && pnpm --filter @monorepo/backend db:generate",
-  "installCommand": "cd ../.. && pnpm install",
   "builds": [
     {
       "src": "api/index.ts",
@@ -13,8 +11,5 @@
       "src": "/(.*)",
       "dest": "/api/index.ts"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
