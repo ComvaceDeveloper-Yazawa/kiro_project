@@ -18,11 +18,27 @@ export class GetArticleUsecase {
       throw new NotFoundError('記事', input.articleId);
     }
 
+    // デバッグログ
+    console.log('🔍 記事アクセスチェック:', {
+      articleId: article.id,
+      title: article.title,
+      isPublished: article.isPublished,
+      publishedAt: article.publishedAt,
+      authorId: article.authorId,
+      requestUserId: input.userId,
+    });
+
     // アクセス権限チェック
     if (!article.isAccessibleBy(input.userId)) {
+      console.log('❌ アクセス拒否:', {
+        isPublished: article.isPublished,
+        userId: input.userId,
+        authorId: article.authorId,
+      });
       throw new AuthorizationError('この記事にアクセスする権限がありません');
     }
 
+    console.log('✅ アクセス許可');
     return article;
   }
 }

@@ -24,11 +24,24 @@ const articleRoutes: FastifyPluginAsync = async (fastify) => {
     const body = CreateArticleSchema.parse(request.body);
     const usecase = new CreateArticleUsecase(articleRepo, tagRepo);
 
+    console.log('📝 記事作成リクエスト受信:', {
+      title: body.title,
+      tags: body.tags,
+      isPublished: body.isPublished,
+    });
+
     const article = await usecase.execute({
       title: body.title,
       content: body.content,
       authorId: request.user.id,
       tags: body.tags || [],
+      isPublished: body.isPublished, // 追加
+    });
+
+    console.log('📝 記事作成完了:', {
+      id: article.id,
+      isPublished: article.isPublished,
+      publishedAt: article.publishedAt,
     });
 
     return reply.code(201).send(article);
@@ -80,19 +93,24 @@ const articleRoutes: FastifyPluginAsync = async (fastify) => {
   });
 
   // GET /api/articles/:id - 記事詳細
-  fastify.get('/:id', { config: { auth: false } }, async (request, reply) => {
-    const params = request.params as { id: string };
-    const usecase = new GetArticleUsecase(articleRepo);
+  fastify.get('/:id', { config: { auth: 'optional' } }, async (request, reply) => {
+    try {
+      const params = request.params as { id: string };
+      const usecase = new GetArticleUsecase(articleRepo);
 
-    // 認証されている場合はuserIdを渡す
-    const userId = request.headers.authorization ? request.user.id : null;
+      // 認証されている場合はuserIdを渡す
+      const userId = request.user?.id || null;
 
-    const article = await usecase.execute({
-      articleId: params.id,
-      userId,
-    });
+      const article = await usecase.execute({
+        articleId: params.id,
+        userId,
+      });
 
-    return reply.send(article);
+      return reply.send(article);
+    } catch (error) {
+      // エラーを再スローしてグローバルエラーハンドラーに処理させる
+      throw error;
+    }
   });
 
   // PUT /api/articles/:id - 記事更新
@@ -117,11 +135,23 @@ const articleRoutes: FastifyPluginAsync = async (fastify) => {
     const params = request.params as { id: string };
     const body = request.body as { isPublished: boolean };
 
+    console.log('🚀 公開リクエスト受信:', {
+      articleId: params.id,
+      userId: request.user.id,
+      isPublished: body.isPublished,
+    });
+
     const usecase = new PublishArticleUsecase(articleRepo);
     const article = await usecase.execute({
       articleId: params.id,
       userId: request.user.id,
       isPublished: body.isPublished,
+    });
+
+    console.log('🚀 公開レスポンス:', {
+      articleId: article.id,
+      isPublished: article.isPublished,
+      publishedAt: article.publishedAt,
     });
 
     return reply.send(article);

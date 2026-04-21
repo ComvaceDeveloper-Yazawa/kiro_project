@@ -12,29 +12,37 @@ const imageRoutes: FastifyPluginAsync = async (fastify) => {
 
   // POST /api/images - 画像アップロード
   fastify.post('/', async (request, reply) => {
-    const data = await request.file();
+    try {
+      const data = await request.file();
 
-    if (!data) {
-      return reply.code(400).send({ error: 'ファイルが指定されていません' });
+      if (!data) {
+        return reply.code(400).send({ success: false, error: 'ファイルが指定されていません' });
+      }
+
+      const buffer = await data.toBuffer();
+      const body = data.fields as { articleId?: { value: string } };
+      const articleId = body.articleId?.value;
+
+      fastify.log.info(
+        { fileName: data.filename, size: buffer.length, articleId },
+        '画像アップロード開始',
+      );
+
+      const usecase = new UploadImageUsecase(articleRepo, imageRepo, storageService);
+      const image = await usecase.execute({
+        file: buffer,
+        fileName: data.filename,
+        articleId: articleId || undefined,
+        userId: request.user.id,
+      });
+
+      fastify.log.info({ imageId: image.id, url: image.url }, '画像アップロード成功');
+
+      return reply.code(201).send({ success: true, data: image });
+    } catch (error) {
+      fastify.log.error(error, '画像アップロードエラー');
+      throw error;
     }
-
-    const buffer = await data.toBuffer();
-    const body = data.fields as { articleId?: { value: string } };
-    const articleId = body.articleId?.value;
-
-    if (!articleId) {
-      return reply.code(400).send({ error: 'articleIdが指定されていません' });
-    }
-
-    const usecase = new UploadImageUsecase(articleRepo, imageRepo, storageService);
-    const image = await usecase.execute({
-      file: buffer,
-      fileName: data.filename,
-      articleId,
-      userId: request.user.id,
-    });
-
-    return reply.code(201).send(image);
   });
 
   // DELETE /api/images/:id - 画像削除

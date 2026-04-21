@@ -3,17 +3,54 @@
 // 注意: _variables.scss は vite.config.ts の additionalData で全ファイルに自動 import される
 
 // Base
-@use "base/reset";
-@use "base/typography";
+@use 'base/reset';
+@use 'base/typography';
 
 // Layout
-@use "layout/grid";
+@use 'layout/grid';
 
 // Module
-@use "module/button";
+@use 'module/button';
 
 // State
-@use "state/states";
+@use 'state/states';
 
 // Theme
-@use "theme/apple";
+@use 'theme/aws';
+
+// ダークモード対応
+:root {
+  --color-primary: #ff9900;
+  --color-secondary: #232f3e;
+  --color-accent: #0073bb;
+  --color-background: #ffffff;
+  --color-surface: #f2f3f3;
+  --color-border: #d5dbdb;
+  --color-text: #16191f;
+  --color-text-muted: #687078;
+  --color-error: #d13212;
+  --color-success: #037f0c;
+  --color-warning: #ff9900;
+}
+
+[data-theme='dark'] {
+  --color-primary: #ff9900;
+  --color-secondary: #0f1b2a;
+  --color-accent: #0073bb;
+  --color-background: #0f1b2a;
+  --color-surface: #16202e;
+  --color-border: #2a3f5f;
+  --color-text: #ffffff;
+  --color-text-muted: #aab7b8;
+  --color-error: #ff5252;
+  --color-success: #7dcea0;
+  --color-warning: #ff9900;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}

@@ -1,0 +1,62 @@
+// =============================================================
+// AWS テーマ
+// =============================================================
+
+@use '../base/variables' as *;
+
+// AWS スタイルのグローバル設定
+body {
+  font-family: $font-family-base;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// AWS スタイルのリンク
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: color $transition-fast;
+
+  &:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+}
+
+// AWS スタイルのボタン
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
+  border: none;
+  padding: $space-3 $space-6;
+  border-radius: $border-radius-sm;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background-color: #ec7211;
+    transform: translateY(-1px);
+    box-shadow: $shadow-md;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-text);
+  border: 2px solid var(--color-border);
+  padding: $space-3 $space-6;
+  border-radius: $border-radius-sm;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+}

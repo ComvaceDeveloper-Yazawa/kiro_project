@@ -1,25 +1,49 @@
 // =============================================================
-// デザイントークン — Apple スタイル
+// デザイントークン — AWS スタイル
 // このファイルは vite.config.ts で全コンポーネントに自動 import される
 // =============================================================
 
-// --- カラー ---
-$color-primary: #000000;
-$color-secondary: #1d1d1f;
-$color-accent: #0071e3;
-$color-background: #ffffff;
-$color-surface: #f5f5f7;
-$color-border: #d2d2d7;
-$color-text: #1d1d1f;
-$color-text-muted: #6e6e73;
-$color-error: #ff3b30;
-$color-success: #34c759;
-$color-warning: #ff9f0a;
+// --- カラー（ライトモード） ---
+$color-primary-light: #ff9900; // AWS Orange
+$color-secondary-light: #232f3e; // AWS Dark Blue
+$color-accent-light: #0073bb; // AWS Blue
+$color-background-light: #ffffff;
+$color-surface-light: #f2f3f3;
+$color-border-light: #d5dbdb;
+$color-text-light: #16191f;
+$color-text-muted-light: #687078;
+$color-error-light: #d13212;
+$color-success-light: #037f0c;
+$color-warning-light: #ff9900;
 
-// --- タイポグラフィ ---
-$font-family-base:
-  -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
-  Arial, sans-serif;
+// --- カラー（ダークモード） ---
+$color-primary-dark: #ff9900; // AWS Orange
+$color-secondary-dark: #0f1b2a; // Darker Blue
+$color-accent-dark: #0073bb; // AWS Blue
+$color-background-dark: #0f1b2a;
+$color-surface-dark: #16202e;
+$color-border-dark: #2a3f5f;
+$color-text-dark: #ffffff;
+$color-text-muted-dark: #aab7b8;
+$color-error-dark: #ff5252;
+$color-success-dark: #7dcea0;
+$color-warning-dark: #ff9900;
+
+// --- デフォルトカラー（ライトモード） ---
+$color-primary: $color-primary-light;
+$color-secondary: $color-secondary-light;
+$color-accent: $color-accent-light;
+$color-background: $color-background-light;
+$color-surface: $color-surface-light;
+$color-border: $color-border-light;
+$color-text: $color-text-light;
+$color-text-muted: $color-text-muted-light;
+$color-error: $color-error-light;
+$color-success: $color-success-light;
+$color-warning: $color-warning-light;
+
+// --- タイポグラフィ（AWS フォント） ---
+$font-family-base: 'Amazon Ember', 'Helvetica Neue', Roboto, Arial, sans-serif;
 $font-size-xs: 0.75rem;
 $font-size-sm: 0.875rem;
 $font-size-base: 1rem;
@@ -44,11 +68,15 @@ $space-1: 0.25rem;
 $space-2: 0.5rem;
 $space-3: 0.75rem;
 $space-4: 1rem;
+$space-5: 1.25rem;
 $space-6: 1.5rem;
 $space-8: 2rem;
+$space-10: 2.5rem;
 $space-12: 3rem;
 $space-16: 4rem;
+$space-20: 5rem;
 $space-24: 6rem;
+$space-32: 8rem;
 
 // --- ボーダー ---
 $border-radius-sm: 0.25rem;

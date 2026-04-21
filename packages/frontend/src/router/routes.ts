@@ -9,7 +9,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('../views/HomeView.vue'),
+    component: () => import('../views/auth/LoginView.vue'),
     meta: { requiresAuth: false },
   },
   // 技術ブログ機能のルート
@@ -23,7 +23,7 @@ export const routes: RouteRecordRaw[] = [
     path: '/articles/new',
     name: 'ArticleCreate',
     component: () => import('../views/ArticleCreateView.vue'),
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: false },
   },
   {
     path: '/articles/:id',
@@ -35,13 +35,13 @@ export const routes: RouteRecordRaw[] = [
     path: '/articles/:id/edit',
     name: 'ArticleEdit',
     component: () => import('../views/ArticleEditView.vue'),
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: false },
   },
   {
     path: '/my-articles',
     name: 'MyArticles',
     component: () => import('../views/MyArticlesView.vue'),
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: false },
   },
   {
     path: '/:pathMatch(.*)*',

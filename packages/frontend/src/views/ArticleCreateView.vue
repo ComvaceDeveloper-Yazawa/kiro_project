@@ -1,10 +1,9 @@
 <template>
   <div class="article-create-view">
-    <h1>新規記事作成</h1>
-
     <ArticleForm
-      submit-label="下書き保存"
+      submit-label="公開"
       :loading="loading"
+      :enable-auto-save="false"
       @submit="handleSubmit"
       @cancel="handleCancel"
     />
@@ -22,28 +21,33 @@ const { loading, create } = useArticle();
 
 const handleSubmit = async (data: CreateArticleInput) => {
   try {
-    const article = await create(data);
+    // 公開フラグを追加して記事を作成
+    const payload = {
+      title: data.title,
+      content: data.content,
+      tags: data.tags || [],
+      isPublished: true,
+    };
+    console.log('📤 記事作成リクエスト:', payload);
+    const article = await create(payload);
+    console.log('✅ 記事作成成功:', article);
     router.push(`/articles/${article.id}`);
   } catch (e) {
+    console.error('❌ 記事作成失敗:', e);
     alert('記事の作成に失敗しました');
   }
 };
 
 const handleCancel = () => {
-  router.push('/articles');
+  if (confirm('編集内容が失われますが、よろしいですか？')) {
+    router.push('/articles');
+  }
 };
 </script>
 
 <style scoped>
 .article-create-view {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-.article-create-view h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
+  min-height: 100vh;
+  background: #ffffff;
 }
 </style>

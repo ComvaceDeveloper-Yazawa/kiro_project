@@ -23,7 +23,9 @@
     </div>
 
     <div v-if="article.tags.length > 0" class="article-card__tags">
-      <span v-for="tag in article.tags" :key="tag" class="article-card__tag"> #{{ tag }} </span>
+      <span v-for="tag in article.tags" :key="tag.id" class="article-card__tag">
+        #{{ tag.name }}
+      </span>
     </div>
   </article>
 </template>

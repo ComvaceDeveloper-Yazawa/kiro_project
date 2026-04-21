@@ -22,6 +22,7 @@ export const CreateArticleSchema = z.object({
     )
     .max(10, 'タグは10個以内である必要があります')
     .default([]),
+  isPublished: z.boolean().optional().default(false), // 公開するかどうか
 });
 
 /**

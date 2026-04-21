@@ -1,10 +1,10 @@
-import type { FastifyPluginAsync } from "fastify";
-import fp from "fastify-plugin";
-import { PrismaClient } from "@prisma/client";
-import { ServiceUnavailableError } from "../domain/errors/app.error.js";
+import type { FastifyPluginAsync } from 'fastify';
+import fp from 'fastify-plugin';
+import { PrismaClient } from '@prisma/client';
+import { ServiceUnavailableError } from '../domain/errors/app.error.js';
 
 // Fastify インスタンスへの型拡張
-declare module "fastify" {
+declare module 'fastify' {
   interface FastifyInstance {
     prisma: PrismaClient;
   }
@@ -18,24 +18,22 @@ declare module "fastify" {
  */
 const dbPlugin: FastifyPluginAsync = async (fastify) => {
   const prisma = new PrismaClient({
-    log:
-      process.env.NODE_ENV === "development"
-        ? ["query", "error", "warn"]
-        : ["error"],
+    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   });
 
   try {
     await prisma.$connect();
-  } catch {
-    throw new ServiceUnavailableError("データベースへの接続に失敗しました");
+  } catch (error) {
+    console.error('Database connection error:', error);
+    throw new ServiceUnavailableError('データベースへの接続に失敗しました');
   }
 
-  fastify.decorate("prisma", prisma);
+  fastify.decorate('prisma', prisma);
 
-  fastify.addHook("onClose", async () => {
+  fastify.addHook('onClose', async () => {
     await prisma.$disconnect();
   });
 };
 
 // fastify-plugin でラップすることでスコープを親に公開する
-export default fp(dbPlugin, { name: "db-plugin" });
+export default fp(dbPlugin, { name: 'db-plugin' });

@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { Article } from '../../domain/entities/article.entity';
+import { Tag } from '../../domain/entities/tag.entity';
 import { ArticleRepository } from '../../domain/repositories/article.repository';
 
 export class ArticleRepositoryImpl implements ArticleRepository {
@@ -34,7 +35,9 @@ export class ArticleRepositoryImpl implements ArticleRepository {
       // タグの更新
       await this.updateArticleTags(article.id, article.tags);
 
-      const tags = updated.article_tags.map((at) => at.tags.name);
+      const tags = updated.article_tags.map(
+        (at) => new Tag(at.tags.id, at.tags.name, at.tags.created_at),
+      );
 
       return new Article(
         updated.id,
@@ -93,7 +96,9 @@ export class ArticleRepositoryImpl implements ArticleRepository {
 
     if (!article) return null;
 
-    const tags = article.article_tags.map((at) => at.tags.name);
+    const tags = article.article_tags.map(
+      (at) => new Tag(at.tags.id, at.tags.name, at.tags.created_at),
+    );
 
     return new Article(
       article.id,
@@ -137,7 +142,9 @@ export class ArticleRepositoryImpl implements ArticleRepository {
 
     return {
       articles: articles.map((article) => {
-        const tags = article.article_tags.map((at) => at.tags.name);
+        const tags = article.article_tags.map(
+          (at) => new Tag(at.tags.id, at.tags.name, at.tags.created_at),
+        );
         return new Article(
           article.id,
           article.title,
@@ -180,7 +187,9 @@ export class ArticleRepositoryImpl implements ArticleRepository {
 
     return {
       articles: articles.map((article) => {
-        const tags = article.article_tags.map((at) => at.tags.name);
+        const tags = article.article_tags.map(
+          (at) => new Tag(at.tags.id, at.tags.name, at.tags.created_at),
+        );
         return new Article(
           article.id,
           article.title,
@@ -247,7 +256,9 @@ export class ArticleRepositoryImpl implements ArticleRepository {
 
     return {
       articles: articles.map((article) => {
-        const tags = article.article_tags.map((at) => at.tags.name);
+        const tags = article.article_tags.map(
+          (at) => new Tag(at.tags.id, at.tags.name, at.tags.created_at),
+        );
         return new Article(
           article.id,
           article.title,
@@ -270,24 +281,24 @@ export class ArticleRepositoryImpl implements ArticleRepository {
     });
   }
 
-  private async updateArticleTags(articleId: string, tagNames: string[]): Promise<void> {
+  private async updateArticleTags(articleId: string, tags: Tag[]): Promise<void> {
     // 既存のタグ関連を削除
     await this.prisma.article_tags.deleteMany({
       where: { article_id: articleId },
     });
 
-    if (tagNames.length === 0) return;
+    if (tags.length === 0) return;
 
     // タグを取得または作成
-    const tags = await Promise.all(
-      tagNames.map(async (name) => {
-        const normalizedName = name.trim().toLowerCase();
-        let tag = await this.prisma.tags.findUnique({
+    const dbTags = await Promise.all(
+      tags.map(async (tag) => {
+        const normalizedName = tag.name.trim().toLowerCase();
+        let dbTag = await this.prisma.tags.findUnique({
           where: { name: normalizedName },
         });
 
-        if (!tag) {
-          tag = await this.prisma.tags.create({
+        if (!dbTag) {
+          dbTag = await this.prisma.tags.create({
             data: {
               id: crypto.randomUUID(),
               name: normalizedName,
@@ -295,13 +306,13 @@ export class ArticleRepositoryImpl implements ArticleRepository {
           });
         }
 
-        return tag;
+        return dbTag;
       }),
     );
 
     // 新しいタグ関連を作成
     await this.prisma.article_tags.createMany({
-      data: tags.map((tag) => ({
+      data: dbTags.map((tag) => ({
         article_id: articleId,
         tag_id: tag.id,
       })),

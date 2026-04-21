@@ -1,3 +1,6 @@
+import { randomUUID } from 'crypto';
+import type { Tag } from './tag.entity';
+
 export class Article {
   constructor(
     public readonly id: string,
@@ -8,8 +11,23 @@ export class Article {
     public publishedAt: Date | null,
     public readonly createdAt: Date,
     public updatedAt: Date,
-    public tags: string[],
+    public tags: Tag[],
   ) {}
+
+  static create(title: string, content: string, authorId: string, tags: Tag[] = []): Article {
+    const now = new Date();
+    return new Article(
+      randomUUID(),
+      title,
+      content,
+      authorId,
+      false, // 初期状態は下書き
+      null,
+      now,
+      now,
+      tags,
+    );
+  }
 
   publish(): void {
     if (this.isPublished) {
@@ -29,7 +47,7 @@ export class Article {
     this.updatedAt = new Date();
   }
 
-  update(title: string, content: string, tags: string[]): void {
+  update(title: string, content: string, tags: Tag[]): void {
     this.title = title;
     this.content = content;
     this.tags = tags;

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 /**
  * 成功レスポンスの Zod スキーマファクトリ。
  * data の型はエンドポイントごとに異なるためジェネリクスで受け取る。
@@ -47,11 +47,11 @@ export declare const ApiErrorSchema: z.ZodObject<{
         message: string;
     };
 }>;
-export type ApiSuccessResponse<T> = {
+export interface ApiSuccessResponse<T> {
     success: true;
     data: T;
     message: string;
-};
+}
 export type ApiErrorResponse = z.infer<typeof ApiErrorSchema>;
 /**
  * 全 API レスポンスのユニオン型。

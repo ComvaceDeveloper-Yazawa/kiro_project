@@ -18,8 +18,8 @@
           </span>
         </div>
         <div v-if="article.tags.length > 0" class="article-detail-view__tags">
-          <span v-for="tag in article.tags" :key="tag" class="article-detail-view__tag">
-            #{{ tag }}
+          <span v-for="tag in article.tags" :key="tag.id" class="article-detail-view__tag">
+            #{{ tag.name }}
           </span>
         </div>
       </header>

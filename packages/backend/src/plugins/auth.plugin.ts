@@ -1,13 +1,13 @@
-import type { FastifyPluginAsync } from "fastify";
-import fp from "fastify-plugin";
-import type { User } from "@supabase/supabase-js";
-import { SupabaseAuthService } from "../infrastructure/supabase/auth.service.js";
-import { UnauthorizedError } from "../domain/errors/app.error.js";
+import type { FastifyPluginAsync } from 'fastify';
+import fp from 'fastify-plugin';
+import type { User } from '@supabase/supabase-js';
+import { SupabaseAuthService } from '../infrastructure/supabase/auth.service.js';
+import { UnauthorizedError } from '../domain/errors/app.error.js';
 
 // リクエストへの型拡張
-declare module "fastify" {
+declare module 'fastify' {
   interface FastifyRequest {
-    user: Pick<User, "id" | "email">;
+    user?: Pick<User, 'id' | 'email'>; // オプショナルに変更
   }
 }
 
@@ -22,13 +22,22 @@ declare module "fastify" {
 const authPlugin: FastifyPluginAsync = async (fastify) => {
   const authService = new SupabaseAuthService();
 
-  fastify.addHook("preHandler", async (request) => {
-    // auth: false が設定されたルートはスキップ
+  fastify.addHook('preHandler', async (request) => {
     const routeConfig = request.routeOptions.config as Record<string, unknown>;
+
+    // auth: false が設定されたルートはスキップ
     if (routeConfig.auth === false) return;
 
     const authHeader = request.headers.authorization;
-    if (!authHeader?.startsWith("Bearer ")) {
+    const hasToken = authHeader?.startsWith('Bearer ');
+
+    // auth: 'optional' の場合、トークンがなければスキップ
+    if (routeConfig.auth === 'optional' && !hasToken) {
+      return;
+    }
+
+    // トークンがない場合はエラー（必須認証の場合）
+    if (!hasToken) {
       throw new UnauthorizedError();
     }
 
@@ -37,12 +46,12 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
 
     request.user = {
       id: user.id,
-      email: user.email ?? "",
+      email: user.email ?? '',
     };
   });
 };
 
 export default fp(authPlugin, {
-  name: "auth-plugin",
-  dependencies: ["db-plugin"],
+  name: 'auth-plugin',
+  dependencies: ['db-plugin'],
 });

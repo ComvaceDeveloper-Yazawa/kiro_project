@@ -49,15 +49,14 @@ export class UpdateArticleUsecase {
     }
 
     // タグの存在確認と作成
-    const tagNames = await Promise.all(
+    const tags = await Promise.all(
       input.tags.map(async (tagName) => {
-        const tag = await this.tagRepository.findOrCreate(tagName);
-        return tag.name;
+        return await this.tagRepository.findOrCreate(tagName);
       }),
     );
 
     // 記事更新
-    article.update(input.title.trim(), input.content, tagNames);
+    article.update(input.title.trim(), input.content, tags);
 
     // 保存
     return this.articleRepository.save(article);

@@ -9,7 +9,13 @@ export function useImageUpload() {
   const previewUrl = ref<string | null>(null);
 
   const getAuthHeaders = () => {
-    const token = localStorage.getItem('auth_token');
+    const token = localStorage.getItem('auth_token') || localStorage.getItem('supabase.auth.token');
+
+    // デバッグ用
+    if (!token) {
+      console.warn('認証トークンが見つかりません。ログインしていますか？');
+    }
+
     return {
       ...(token && { Authorization: `Bearer ${token}` }),
     };
@@ -43,7 +49,7 @@ export function useImageUpload() {
     reader.readAsDataURL(file);
   };
 
-  const uploadImage = async (file: File, articleId: string): Promise<ArticleImage> => {
+  const uploadImage = async (file: File, articleId?: string): Promise<ArticleImage> => {
     if (!validateImage(file)) {
       throw new Error(error.value || '画像のバリデーションに失敗しました');
     }
@@ -54,7 +60,11 @@ export function useImageUpload() {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('articleId', articleId);
+      if (articleId) {
+        formData.append('articleId', articleId);
+      }
+
+      console.log('画像アップロード開始:', { fileName: file.name, size: file.size, articleId });
 
       const response = await fetch(`${API_BASE_URL}/api/images`, {
         method: 'POST',
@@ -62,12 +72,19 @@ export function useImageUpload() {
         body: formData,
       });
 
+      console.log('画像アップロードレスポンス:', { status: response.status, ok: response.ok });
+
       if (!response.ok) {
-        throw new Error('画像のアップロードに失敗しました');
+        const errorData = await response.json().catch(() => ({}));
+        console.error('画像アップロードエラー:', errorData);
+        throw new Error(errorData.error || `画像のアップロードに失敗しました (${response.status})`);
       }
 
-      return await response.json();
+      const result = await response.json();
+      console.log('画像アップロード成功:', result);
+      return result.data || result;
     } catch (e) {
+      console.error('画像アップロード例外:', e);
       error.value = e instanceof Error ? e.message : '画像のアップロードに失敗しました';
       throw e;
     } finally {

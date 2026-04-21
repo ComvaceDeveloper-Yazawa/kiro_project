@@ -8,6 +8,7 @@ export interface CreateArticleInput {
   content: string;
   authorId: string;
   tags: string[];
+  isPublished?: boolean; // 公開するかどうか（デフォルト: false）
 }
 
 export class CreateArticleUsecase {
@@ -35,25 +36,19 @@ export class CreateArticleUsecase {
     }
 
     // タグの存在確認と作成
-    const tagNames = await Promise.all(
+    const tags = await Promise.all(
       input.tags.map(async (tagName) => {
-        const tag = await this.tagRepository.findOrCreate(tagName);
-        return tag.name;
+        return await this.tagRepository.findOrCreate(tagName);
       }),
     );
 
     // 記事エンティティ作成
-    const article = new Article(
-      crypto.randomUUID(),
-      input.title.trim(),
-      input.content,
-      input.authorId,
-      false, // 初期状態は下書き
-      null,
-      new Date(),
-      new Date(),
-      tagNames,
-    );
+    const article = Article.create(input.title.trim(), input.content, input.authorId, tags);
+
+    // 公開フラグが指定されている場合は公開
+    if (input.isPublished) {
+      article.publish();
+    }
 
     // 保存
     return this.articleRepository.save(article);
