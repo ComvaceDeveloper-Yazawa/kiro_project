@@ -1,6 +1,6 @@
 # kiro_project
 
-AWS Kiro学習用のリポジトリ
+AWS Kiro学習用のリポジトリ（Vercel対応）
 
 ---
 
