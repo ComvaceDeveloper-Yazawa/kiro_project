@@ -1,3 +1,4 @@
+//error確認
 {
   "compilerOptions": {
     "target": "ES2022",
