@@ -56,7 +56,15 @@ AI-DLCは、AIがソフトウェア開発の各フェーズを構造的にガイ
 - ✅ Phase 1-6: Backend完成（Domain, Infrastructure, Application, Interface層）
 - ✅ Phase 7-10: Frontend完成（Composables, Stores, Components, Views, Router）
 - ✅ Phase 11: スタイリング（レスポンシブ・アクセシビリティ対応）
-- 🚧 Phase 12-16: テスト・ドキュメント作成中
+- ✅ Phase 12-16: テスト・ドキュメント作成完了
+- ✅ Vercel デプロイ設定完了
+
+### デプロイ情報
+
+**フロントエンド**: https://kiro-project-frontend.vercel.app  
+**バックエンド**: https://kiro-project-backend-nine.vercel.app
+
+詳細なデプロイ手順は [docs/VERCEL_DEPLOYMENT.md](docs/VERCEL_DEPLOYMENT.md) を参照してください。
 
 ---
 
