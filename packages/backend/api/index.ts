@@ -2,6 +2,7 @@
  * Vercel Serverless Function エントリーポイント
  *
  * Fastifyアプリケーションをサーバーレス環境で実行するためのアダプター
+ * Updated: 2026-04-22
  */
 import { buildApp } from '../src/app.js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
