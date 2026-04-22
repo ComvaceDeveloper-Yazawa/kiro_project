@@ -1918,11 +1918,125 @@ Vercel環境で環境変数が正しく読み込まれない問題（特に`supa
   - 再デプロイを実行した
   - デプロイが成功している（緑色のチェックマーク）
   - ブラウザのコンソールでデバッグログを確認した
-- **完全なリセット手順**（4ステップ）:
-  - ステップ1: 環境変数を削除（Settings → Environment Variables → すべて削除）
-  - ステップ2: 環境変数を再追加（`VITE_API_BASE_URL` / `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` / すべての環境にチェック）
-  - ステップ3: キャッシュなしで再デプロイ（"Use existing Build Cache"のチェックを外す）
-  - ステップ4: 確認（デプロイ完了 → ブラウザでアクセス → コンソールでデバッグログ確認）
+
+**なぜ存在するか:**
+技術ブログ機能のVercelデプロイ後、フロントエンドで環境変数が正しく読み込まれない問題（特に`supabaseUrl is required`エラー）が発生したため、以下の目的で作成されました:
+
+1. **環境変数エラーの特定と解決**: Vercel環境で環境変数が正しく読み込まれない問題の原因を5つのパターンに分類し、それぞれの解決策を提供する
+2. **デバッグ方法の提供**: ブラウザのコンソールで環境変数の状態を確認する方法を提供し、問題が環境変数の設定ミスかビルドプロセスの問題かを素早く特定できるようにする
+3. **モノレポ特有の問題への対応**: モノレポ構成でVercelの環境変数がViteのビルドプロセスに正しく渡されない問題（原因5）を明示し、`vercel.json`のビルドコマンドで環境変数を明示的にエクスポートする解決策を提供する（2026-04-22追加）
+4. **チェックリストによる確認**: 環境変数設定の7項目チェックリストを提供し、設定漏れを防ぐ
+
+**いつ使われるか:**
+
+- **Vercelデプロイ後のトラブルシューティング時**: フロントエンドで`supabaseUrl is required`エラーが発生したとき
+- **環境変数設定確認時**: Vercel Dashboardで環境変数を設定した後、正しく反映されているかを確認するとき
+- **モノレポ構成のデプロイ時**: モノレポ構成でViteの環境変数が正しく読み込まれない問題が発生したとき（原因5の確認）
+- **デバッグ時**: ブラウザのコンソールで環境変数の状態を確認し、問題の原因を特定するとき
+
+**関連ファイル:**
+
+- `docs/VERCEL_DEPLOYMENT.md` - Vercelデプロイの包括的なガイド
+- `docs/VERCEL_ENV_VARS.md` - 環境変数の設定ガイド
+- `docs/VERCEL_500_ERROR_FIX.md` - バックエンドの500エラー修正ガイド（2026-04-22追加）
+- `packages/frontend/.env.example` - フロントエンド環境変数のテンプレート
+- `vercel.json` - Vercelビルド設定（ビルドコマンドで環境変数をエクスポート）
+
+---
+
+### `VERCEL_500_ERROR_FIX.md`
+
+**何を定義しているか:**
+Vercelにデプロイしたバックエンドで500エラー（Internal Server Error）が発生する問題の診断・根本原因・修正手順・トラブルシューティングを定義した問題解決ガイドです。以下の内容が含まれます。
+
+- **問題の診断**:
+  - アクセスURL: `https://kiro-project-backend-nine.vercel.app/api/health`
+  - エラー: `GET https://kiro-project-backend-nine.vercel.app/api/health 500 (Internal Server Error)`
+- **根本原因**（3つ）:
+  - ビルドコマンドの欠如: `vercel.json`にビルドコマンドが設定されていなかった
+  - ビルド成果物の不在: `packages/backend/dist/api/index.js`が生成されていない
+  - インポートエラー: `api/index.js`が存在しないファイルをインポートしようとしている
+- **実施した修正**（2つ）:
+  - **修正1: vercel.json の更新** — ビルドコマンドを追加
+    - `pnpm install`: 依存関係のインストール
+    - `pnpm --filter @monorepo/backend db:generate`: Prismaクライアントの生成
+    - `pnpm --filter @monorepo/backend build:api`: APIのビルド（`dist/api/index.js`を生成）
+  - **修正2: .vercelignore の更新** — `dist`フォルダを除外リストから削除（ビルド成果物をVercelにアップロードする必要があるため）
+- **デプロイ手順**（4ステップ）:
+  - ステップ1: 変更をコミット＆プッシュ（`git add vercel.json packages/backend/.vercelignore` → `git commit` → `git push origin main`）
+  - ステップ2: Vercelで自動デプロイ（GitHubにプッシュすると自動的に再デプロイ開始）
+  - ステップ3: 環境変数の確認（9個の必須環境変数: `NODE_ENV` / Supabase接続情報 / データベース接続 / CORS設定 / レート制限）
+  - ステップ4: デプロイの確認（`curl https://kiro-project-backend-nine.vercel.app/api/health` → `{"status":"ok"}`）
+- **ローカルでのビルド確認**:
+  - `cd packages/backend` → `pnpm db:generate` → `pnpm build:api` → `ls -la dist/api/`（`index.js`が存在することを確認）
+- **ビルドプロセスの流れ**（4ステップ）:
+  - ステップ1: `pnpm install` → `node_modules/`にパッケージをインストール
+  - ステップ2: `pnpm --filter @monorepo/backend db:generate` → Prismaクライアントを生成（`node_modules/.prisma/client/`）
+  - ステップ3: `pnpm --filter @monorepo/backend build:api` → esbuildでTypeScriptをバンドル（`packages/backend/dist/api/index.js`を生成）
+  - ステップ4: Vercel Deployment → `api/index.js`が`dist/api/index.js`をインポート → Fastifyアプリケーションが起動
+- **トラブルシューティング**（3つの問題）:
+  - **問題1: ビルドが失敗する場合**
+    - 症状: Vercelのビルドログでエラーが表示される
+    - 確認事項: `package.json`に`build:api`スクリプトが存在するか / TypeScriptの型エラーがないか / 依存関係が正しくインストールされているか
+    - 解決策: ローカルでビルドを試す（`cd packages/backend` → `pnpm install` → `pnpm db:generate` → `pnpm build:api`）
+  - **問題2: データベース接続エラー**
+    - 症状: `P1001: Can't reach database server`
+    - 確認事項: `DATABASE_URL`が正しく設定されているか / `DIRECT_URL`が設定されているか / Supabaseのデータベースが起動しているか
+    - 解決策: Vercel Dashboardで環境変数を再確認 / Supabase Dashboardで接続文字列を確認 / `docs/VERCEL_ENV_VARS.md`を参照
+  - **問題3: CORSエラー**
+    - 症状: フロントエンドから`Access-Control-Allow-Origin`エラー
+    - 確認事項: `CORS_ORIGIN`にフロントエンドURLが含まれているか / プレビュー環境のワイルドカードが設定されているか
+    - 解決策: Vercel環境変数に`CORS_ORIGIN=https://kiro-project-frontend.vercel.app,https://kiro-project-frontend-*.vercel.app`を設定
+- **関連ドキュメント**（3つ）:
+  - `docs/VERCEL_DEPLOYMENT.md` - Vercelデプロイ全般のガイド
+  - `docs/VERCEL_ENV_VARS.md` - 環境変数の設定ガイド
+  - `docs/VERCEL_TROUBLESHOOTING.md` - トラブルシューティング
+- **チェックリスト**（9項目）:
+  - デプロイ前の確認（5項目）: `vercel.json`にビルドコマンドが設定されている / `.vercelignore`から`dist`が削除されている / ローカルで`pnpm build:api`が成功する / `packages/backend/dist/api/index.js`が生成される / すべての環境変数がVercelに設定されている
+  - デプロイ後の確認（4項目）: Vercelのビルドログでエラーがない / `/api/health`エンドポイントが200を返す / フロントエンドからAPIにアクセスできる / 認証が正常に動作する
+
+**なぜ存在するか:**
+技術ブログ機能のバックエンドをVercelにデプロイした後、`/api/health`エンドポイントにアクセスすると500エラー（Internal Server Error）が発生する問題が発生しました。以下の目的で作成されました:
+
+1. **500エラーの根本原因の明確化**: ビルドコマンドの欠如・ビルド成果物の不在・インポートエラーという3つの根本原因を明示し、開発者が問題の本質を理解できるようにする
+2. **修正手順の提供**: `vercel.json`へのビルドコマンド追加・`.vercelignore`からの`dist`削除という2つの修正を具体的なコード例とともに提供し、開発者が迷わず修正できるようにする
+3. **ビルドプロセスの可視化**: `pnpm install` → `db:generate` → `build:api` → Vercel Deploymentという4ステップのビルドプロセスを図解し、各ステップで何が生成されるかを明確にする
+4. **ローカルでのビルド確認手順**: デプロイ前にローカルでビルドが成功するかを確認する手順を提供し、Vercelデプロイ前に問題を発見できるようにする
+5. **包括的なトラブルシューティング**: ビルド失敗・データベース接続エラー・CORSエラーという3つの典型的な問題について、症状・確認事項・解決策を明示する
+6. **チェックリストによる確認**: デプロイ前5項目・デプロイ後4項目のチェックリストを提供し、デプロイ作業の完了確認を体系化する
+7. **関連ドキュメントへの誘導**: `docs/VERCEL_DEPLOYMENT.md`（包括的なデプロイガイド）・`docs/VERCEL_ENV_VARS.md`（環境変数設定）・`docs/VERCEL_TROUBLESHOOTING.md`（フロントエンドのトラブルシューティング）への参照を提供し、問題解決のための情報源を明確にする
+
+**いつ使われるか:**
+
+- **バックエンドの500エラー発生時**: Vercelにデプロイしたバックエンドで`/api/health`エンドポイントにアクセスすると500エラーが発生するとき（最優先で参照するドキュメント）
+- **ビルドエラー発生時**: Vercelのビルドログで「Module not found」エラーや「Cannot find module」エラーが表示されるとき
+- **デプロイ前の確認時**: ローカルでビルドが成功するかを確認し、Vercelデプロイ前に問題を発見するとき
+- **データベース接続エラー発生時**: バックエンドで`P1001: Can't reach database server`エラーが発生するとき
+- **CORSエラー発生時**: フロントエンドからバックエンドAPIにアクセスすると`Access-Control-Allow-Origin`エラーが発生するとき
+- **新規メンバーへのオンボーディング**: プロジェクトに参加した開発者が、バックエンドのVercelデプロイで発生する典型的な問題と解決策を理解するとき
+- **本番環境デプロイ時**: 本番環境へのデプロイ前に、ビルドコマンド・`.vercelignore`・環境変数の設定を確認するとき
+
+**関連ファイル:**
+
+- `docs/VERCEL_DEPLOYMENT.md` - Vercelデプロイの包括的なガイド（このドキュメントはバックエンドの500エラーに特化した問題解決ガイド）
+- `docs/VERCEL_ENV_VARS.md` - 環境変数の設定ガイド（バックエンドの9個の必須環境変数を参照）
+- `docs/VERCEL_TROUBLESHOOTING.md` - フロントエンドのトラブルシューティング（環境変数が正しく読み込まれない問題）
+- `vercel.json` - Vercelビルド設定（ビルドコマンドの追加が必要）
+- `packages/backend/.vercelignore` - Vercel除外設定（`dist`フォルダを除外リストから削除が必要）
+- `packages/backend/package.json` - バックエンドのビルドスクリプト（`build:api`スクリプトの定義）
+- `packages/backend/api/index.ts` - バックエンドのエントリポイント（`dist/api/index.js`をインポート）
+- `packages/backend/src/app.ts` - Fastifyアプリケーション（プラグイン登録・起動）
+- `aidlc-docs/construction/backend/code/summary.md` - バックエンドユニットの成果物一覧（ビルド成果物の確認）
+- `aidlc-docs/construction/build-and-test/build-instructions.md` - ビルド手順書（ローカルでのビルド確認の参考）
+- `.kiro/specs/tech-blog/requirements.md` - 技術ブログ機能の要件定義（バックエンドAPIの要件）
+- `.kiro/specs/tech-blog/design.md` - 技術ブログ機能の設計書（バックエンドアーキテクチャ・Fastify + Prisma + Supabase Auth）
+
+--- **完全なリセット手順**（4ステップ）:
+
+- ステップ1: 環境変数を削除（Settings → Environment Variables → すべて削除）
+- ステップ2: 環境変数を再追加（`VITE_API_BASE_URL` / `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` / すべての環境にチェック）
+- ステップ3: キャッシュなしで再デプロイ（"Use existing Build Cache"のチェックを外す）
+- ステップ4: 確認（デプロイ完了 → ブラウザでアクセス → コンソールでデバッグログ確認）
 - **ローカルでの確認方法**（3ステップ）:
   - ステップ1: `.env`ファイルを確認（`packages/frontend/.env`の存在・`VITE_API_BASE_URL` / `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY`の確認）
   - ステップ2: ローカルでビルド（`cd packages/frontend` → `pnpm build` → エラーがないことを確認）

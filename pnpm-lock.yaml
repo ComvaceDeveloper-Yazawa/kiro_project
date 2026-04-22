@@ -7,10 +7,17 @@ settings:
 importers:
 
   .:
+    dependencies:
+      '@vercel/node':
+        specifier: ^5.7.12
+        version: 5.7.12(rollup@4.60.1)
     devDependencies:
       prettier:
         specifier: ^3.3.3
         version: 3.8.3
+      typescript:
+        specifier: ^5.6.3
+        version: 5.9.3
       vitest:
         specifier: ^2.1.9
         version: 2.1.9(@edge-runtime/vm@3.2.0)(@types/node@22.19.17)(jsdom@29.0.2)(sass@1.99.0)
