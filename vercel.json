@@ -1,19 +1,11 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/index.ts",
-      "use": "@vercel/node"
+  "installCommand": "pnpm install",
+  "buildCommand": "pnpm build",
+  "functions": {
+    "api/index.ts": {
+      "runtime": "@vercel/node@3.0.0",
+      "includeFiles": "node_modules/.prisma/**"
     }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/index.ts"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/api/index.ts"
-    }
-  ]
+  }
 }

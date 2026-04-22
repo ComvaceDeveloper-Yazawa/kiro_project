@@ -1880,6 +1880,92 @@ components にビジネスロジックを書くことは禁止されています
 
 ---
 
+### `VERCEL_500_ERROR_FIX.md`
+
+**何を定義しているか:**
+Vercelデプロイ時に発生する500 Internal Server Error（特に`/api/health`エンドポイントへのアクセス時）の根本原因・実施した修正・デプロイ手順・トラブルシューティングを定義した問題解決ガイドです。以下の内容が含まれます。
+
+- **問題の診断**:
+  - アクセスURL: `https://kiro-project-backend-nine.vercel.app/api/health`
+  - エラー: `GET https://kiro-project-backend-nine.vercel.app/api/health 500 (Internal Server Error)`
+- **根本原因**（3つ）:
+  - ビルドプロセスの問題: `builds`設定を使用すると、カスタム`buildCommand`が無視される
+  - 間接的なインポート: `api/index.js`が`dist/api/index.js`を経由していたため、ビルドが複雑化
+  - TypeScriptのビルド不足: Vercelデプロイ時にTypeScriptファイルが正しくビルドされていない
+- **実施した修正**:
+  - 直接TypeScriptエントリーポイントを使用: `api/index.js` → `dist/api/index.js`（変更前）から `api/index.ts` → 直接バックエンドコードをインポート（変更後）。`@vercel/node`は自動的にTypeScriptをビルドするため、中間ビルドステップが不要
+  - 新しいファイル構成: `api/index.ts`（TypeScriptエントリーポイント・新規作成）/ `tsconfig.json`（TypeScript設定・新規作成）/ `vercel.json`（`api/index.ts`を参照するように更新）/ `package.json`（`@vercel/node`依存関係を追加）/ `api/index.js`（削除・不要）
+- **デプロイ手順**（5ステップ）:
+  - ステップ1: 依存関係のインストール（`pnpm install`）
+  - ステップ2: 変更をコミット＆プッシュ（`git add .` → `git commit -m "fix: Use TypeScript entry point for Vercel deployment"` → `git push origin main`）
+  - ステップ3: Vercelで自動デプロイ（GitHubにプッシュすると、Vercelが自動的に再デプロイを開始）
+  - ステップ4: 環境変数の確認（Vercel Dashboardで必須環境変数が設定されているか確認: `NODE_ENV=production` / `SUPABASE_URL` / `SUPABASE_ANON_KEY` / `SUPABASE_SERVICE_ROLE_KEY` / `DATABASE_URL`（Pooler URL with `?pgbouncer=true`）/ `DIRECT_URL`（Direct connection URL）/ `CORS_ORIGIN` / `RATE_LIMIT_MAX` / `AUTH_RATE_LIMIT_MAX`）
+  - ステップ5: デプロイの確認（`curl https://kiro-project-backend-nine.vercel.app/api/health` → 期待される応答: `{"status":"ok"}`）
+- **新しいビルドプロセスの流れ**（4ステップ）:
+  - ステップ1: Vercelが`api/index.ts`を検出 → `@vercel/node`が自動的にTypeScriptをビルド
+  - ステップ2: `packages/backend/src/app.js`をインポート → Fastifyアプリケーションを初期化
+  - ステップ3: Prisma Clientの生成 → ルートの`build`スクリプトで実行（`pnpm --filter @monorepo/backend db:generate`）
+  - ステップ4: Serverless Functionとして実行 → リクエストごとにFastifyアプリを再利用
+- **ローカルでの動作確認**:
+  - Vercel CLIをインストール（`npm i -g vercel`）
+  - ローカルでVercel環境を起動（`vercel dev`）
+  - ブラウザで確認（`http://localhost:3000/api/health`）
+- **トラブルシューティング**（4つの問題と解決策）:
+  - ビルドが失敗する場合: "Module not found"エラー → 確認事項（`pnpm-workspace.yaml`が正しく設定されているか / `packages/backend/src/app.ts`が存在するか / TypeScriptの型エラーがないか）→ 解決策（ローカルでTypeScriptの型チェック: `cd packages/backend` → `pnpm tsc --noEmit`）
+  - Prisma Clientエラー: `@prisma/client`が見つからない → 確認事項（ルートの`build`スクリプトに`db:generate`が含まれているか / Vercel環境変数に`DATABASE_URL`と`DIRECT_URL`が設定されているか）→ 解決策（Vercel Dashboardの Settings → General → Build & Development Settings → Build Command: `pnpm build` / Output Directory: 空欄）
+  - データベース接続エラー: `P1001: Can't reach database server` → 確認事項（`DATABASE_URL`が正しく設定されているか / `DIRECT_URL`が設定されているか / Supabaseのデータベースが起動しているか）→ 解決策（Vercel Dashboardで環境変数を再確認 / Supabase Dashboardで接続文字列を確認）
+  - CORSエラー: フロントエンドから`Access-Control-Allow-Origin`エラー → 解決策（Vercel環境変数に設定: `CORS_ORIGIN=https://kiro-project-frontend.vercel.app,https://kiro-project-frontend-*.vercel.app`）
+- **チェックリスト**:
+  - デプロイ前の確認（6項目: `api/index.ts`が作成されている / `vercel.json`が`api/index.ts`を参照している / ルートに`tsconfig.json`が存在する / ルート`package.json`に`@vercel/node`依存関係がある / `pnpm install`を実行済み / すべての環境変数がVercelに設定されている）
+  - デプロイ後の確認（4項目: Vercelのビルドログでエラーがない / `/api/health`エンドポイントが200を返す / フロントエンドからAPIにアクセスできる / 認証が正常に動作する）
+- **重要な変更点まとめ**（表形式）:
+  - エントリーポイント: `api/index.js` → `api/index.ts`
+  - ビルド方法: 手動ビルド → dist → `@vercel/node`自動ビルド
+  - インポート: `dist/api/index.js` → `src/app.js`直接
+  - 設定ファイル: なし → `tsconfig.json`追加
+
+**なぜ存在するか:**
+技術ブログアプリケーションのバックエンドをVercelにデプロイした際に、`/api/health`エンドポイントへのアクセス時に500 Internal Server Errorが発生しました。以下の目的で作成されました:
+
+1. **根本原因の記録**: 500エラーの根本原因（`builds`設定によるカスタム`buildCommand`の無視・間接的なインポート・TypeScriptのビルド不足）を明文化し、同じ問題が再発した際に素早く原因を特定できるようにする
+2. **修正内容の文書化**: 実施した修正（`api/index.js` → `api/index.ts`への変更・`@vercel/node`による自動TypeScriptビルド・中間ビルドステップの削除）を詳細に記録し、なぜこの修正が有効だったかを説明する
+3. **デプロイ手順の提供**: 修正後のデプロイ手順（依存関係のインストール・コミット＆プッシュ・Vercelで自動デプロイ・環境変数の確認・デプロイの確認）を5ステップで明示し、開発者が迷わずデプロイできるようにする
+4. **新しいビルドプロセスの説明**: `@vercel/node`による自動TypeScriptビルド → Fastifyアプリケーションの初期化 → Prisma Clientの生成 → Serverless Functionとして実行という新しいビルドプロセスの流れを図解し、開発者がビルドプロセスを理解できるようにする
+5. **ローカルでの動作確認方法の提供**: Vercel CLIを使ってローカルでVercel環境をシミュレートする方法（`vercel dev`）を提供し、デプロイ前にローカルで動作確認できるようにする
+6. **包括的なトラブルシューティングの提供**: ビルドが失敗する場合・Prisma Clientエラー・データベース接続エラー・CORSエラーという4つの典型的な問題について、確認事項と解決策を明示する
+7. **チェックリストによる確認**: デプロイ前の確認（6項目）とデプロイ後の確認（4項目）のチェックリストを提供し、設定漏れや動作確認漏れを防ぐ
+8. **変更点の一覧化**: エントリーポイント・ビルド方法・インポート・設定ファイルという4つの観点で変更前と変更後を表形式で比較し、何が変わったかを一目で把握できるようにする
+
+**いつ使われるか:**
+
+- **500エラー発生時**: Vercelデプロイ後に`/api/health`エンドポイントへのアクセス時に500 Internal Server Errorが発生したとき（最優先で参照するドキュメント）
+- **ビルドエラー発生時**: Vercelのビルドログで"Module not found"エラー・Prisma Clientエラー・TypeScriptビルドエラーが発生したとき
+- **デプロイ手順確認時**: 修正後のデプロイ手順（依存関係のインストール・コミット＆プッシュ・環境変数の確認）を確認するとき
+- **ローカルテスト時**: Vercel CLIを使ってローカルでVercel環境をシミュレートし、デプロイ前に動作確認するとき
+- **トラブルシューティング時**: データベース接続エラー・CORSエラーが発生し、原因と解決策を確認するとき
+- **新規メンバーへのオンボーディング**: プロジェクトに参加した開発者が、Vercelデプロイ時の500エラーの修正履歴を理解するとき
+- **同様の問題が再発した際**: 将来的に同じ500エラーが発生した場合に、過去の修正内容を参照して素早く解決するとき
+- **ビルドプロセスの理解**: `@vercel/node`による自動TypeScriptビルドの仕組みを理解するとき
+
+**関連ファイル:**
+
+- `docs/VERCEL_DEPLOYMENT.md` - Vercelデプロイの包括的なガイド（このドキュメントは500エラーの修正に特化）
+- `docs/VERCEL_TROUBLESHOOTING.md` - Vercel環境変数のトラブルシューティング（このドキュメントは500エラーのトラブルシューティング）
+- `docs/VERCEL_ENV_VARS.md` - Vercel環境変数の完全なリスト（環境変数の確認に使用）
+- `api/index.ts` - TypeScriptエントリーポイント（この修正で新規作成されたファイル）
+- `tsconfig.json` - TypeScript設定（この修正で新規作成されたファイル）
+- `vercel.json` - Vercel設定（`api/index.ts`を参照するように更新）
+- `package.json` - ルートのpackage.json（`@vercel/node`依存関係を追加）
+- `packages/backend/src/app.ts` - Fastifyアプリケーション（`api/index.ts`から直接インポート）
+- `packages/backend/prisma/schema.prisma` - Prismaスキーマ（Prisma Clientの生成元）
+- `.kiro/specs/tech-blog/requirements.md` - 技術ブログ機能の要件定義（デプロイ要件を含む）
+- `.kiro/specs/tech-blog/design.md` - 技術ブログ機能の設計書（バックエンドアーキテクチャ・Fastify構成）
+- `aidlc-docs/construction/backend/code/summary.md` - バックエンドユニットの成果物一覧（Vercelにデプロイされるファイル）
+- `aidlc-docs/construction/build-and-test/build-instructions.md` - ビルド手順書（ローカルでのビルド確認・Vercelビルドの参考）
+- `README.md` - プロジェクト全体の説明書（Vercel対応を明示・デプロイ手順へのリンクを含む）
+
+---
+
 ### `docs/VERCEL_TROUBLESHOOTING.md`
 
 **何を定義しているか:**
