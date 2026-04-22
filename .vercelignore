@@ -2,9 +2,7 @@ node_modules
 .git
 .env
 .env.local
-packages/frontend
 packages/e2e
 *.log
 coverage
-dist
 .DS_Store
