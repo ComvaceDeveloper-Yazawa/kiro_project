@@ -102,8 +102,11 @@ kiro_project/
 - **プロジェクト概要**: AWS Kiro学習用リポジトリ（Vercel対応）・AI-DLC ワークフローの説明
 - **技術ブログ機能**: 実装済みの技術ブログ機能の概要（記事管理・画像アップロード・タグ・サンドボックス埋め込み・レスポンシブ・アクセシビリティ）
 - **技術スタック**: Backend（Fastify + Prisma + Supabase）・Frontend（Vue 3 + Pinia + Vue Router）・Shared（Zod schemas）
-- **開発状況**: Phase 1-11完了（Backend・Frontend・スタイリング）・Phase 12-16完了（テスト・ドキュメント）・Vercel デプロイ設定完了
+- **開発状況**: Phase 1-11完了（Backend・Frontend・スタイリング）・Phase 12-16完了（テスト・ドキュメント）・Vercel デプロイ設定完了（モノレポ対応）
 - **デプロイ情報**: フロントエンド（https://kiro-project-frontend.vercel.app）・バックエンド（https://kiro-project-backend-nine.vercel.app）・詳細なデプロイ手順（docs/VERCEL_DEPLOYMENT.md）
+- **Vercel設定概要**:
+  - フロントエンド（Root Directory: `packages/frontend`・Build Command: `pnpm build`・Output Directory: `dist`）
+  - バックエンド（Root Directory: ルート（モノレポ全体）・Build Command: `vercel.json`で制御・Install Command: `pnpm install --no-frozen-lockfile`・API: `/api/index.ts`経由でServerless Function化）
 - **ディレクトリ構造**: packages/（backend・frontend・shared・supabase・e2e）・.kiro/（specs・steering・rule-details）
 - **セットアップ手順**: 前提条件・インストール・環境変数・Prismaセットアップ・開発サーバー起動
 - **AI-DLC ワークフロー概要**: 3フェーズ構成（INCEPTION・CONSTRUCTION・OPERATIONS）・各ステージの実行条件
@@ -122,6 +125,7 @@ kiro_project/
 4. **AI-DLC ワークフローの説明**: 3フェーズ構成・各ステージの役割・実行条件を説明し、AI-DLC の仕組みを理解できるようにする
 5. **Vercel対応の明示**: タイトルに「Vercel対応」を追加し、このプロジェクトがVercelにデプロイ可能であることを明示する（2026-04-22更新）
 6. **デプロイ情報の提供**: Phase 12-16（テスト・ドキュメント作成）の完了とVercelデプロイ設定の完了を明示し、本番環境のURL（フロントエンド・バックエンド）と詳細なデプロイ手順（docs/VERCEL_DEPLOYMENT.md）へのリンクを提供する（2026-04-23更新）
+7. **Vercel設定の明文化**: モノレポ構成でのフロントエンド・バックエンドの個別デプロイ設定（Root Directory・Build Command・Output Directory・Install Command等）を明示し、Vercelプロジェクト設定時の参照資料として機能する（2026-04-23更新）
 
 **いつ使われるか:**
 
@@ -132,6 +136,7 @@ kiro_project/
 - **デプロイ時**: Vercel対応であることを確認し、デプロイ手順を参照するとき
 - **本番環境確認時**: デプロイ済みのフロントエンド・バックエンドのURLを確認し、本番環境にアクセスするとき（2026-04-23更新）
 - **開発状況確認時**: Phase 12-16（テスト・ドキュメント作成）の完了状況を確認するとき（2026-04-23更新）
+- **Vercel設定確認時**: モノレポ構成でのフロントエンド・バックエンドの個別デプロイ設定（Root Directory・Build Command・Output Directory等）を確認するとき（2026-04-23更新）
 
 **関連ファイル:**
 

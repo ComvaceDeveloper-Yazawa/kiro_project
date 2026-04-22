@@ -1,6 +1,0 @@
-{
-  "version": 2,
-  "buildCommand": "cd packages/backend && pnpm vercel-build",
-  "outputDirectory": "packages/backend/public",
-  "installCommand": "pnpm install --no-frozen-lockfile"
-}

@@ -21,14 +21,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // URLパスを正規化（/api プレフィックスを削除）
-    let url = req.url || '/';
-    if (url.startsWith('/api')) {
-      url = url.substring(4) || '/';
-    }
+    const url = req.url!.replace(/^\/api/, '') || '/';
 
     // VercelのリクエストをFastifyに変換して処理
     const response = await app.inject({
-      method: req.method || 'GET',
+      method: req.method!,
       url: url,
       headers: req.headers as Record<string, string>,
       payload: req.body,
@@ -39,12 +36,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.status(response.statusCode);
 
     // ヘッダーを設定
-    Object.entries(response.headers).forEach(([key, value]) => {
-      res.setHeader(key, value as string);
+    Object.entries(response.headers).forEach(([key, values]) => {
+      if (Array.isArray(values)) {
+        values.forEach((v) => res.setHeader(key, v));
+      } else {
+        res.setHeader(key, values as string);
+      }
     });
 
     // レスポンスボディを送信
-    res.send(response.body);
+    res.send(response.payload);
   } catch (error) {
     console.error('❌ Serverless Function Error:', error);
     res.status(500).json({
