@@ -1,4 +1,5 @@
 {
   "buildCommand": "pnpm --filter @monorepo/backend vercel-build",
-  "installCommand": "pnpm install --prod=false --no-frozen-lockfile"
+  "installCommand": "pnpm install --prod=false",
+  "framework": null
 }
