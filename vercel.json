@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "buildCommand": "pnpm install && pnpm --filter @monorepo/backend db:generate && pnpm --filter @monorepo/backend build:api",
   "builds": [
     {
       "src": "api/index.js",
