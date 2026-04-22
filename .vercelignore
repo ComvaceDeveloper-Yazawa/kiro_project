@@ -8,3 +8,4 @@ packages/e2e
 coverage
 dist
 .DS_Store
+vercel.json
