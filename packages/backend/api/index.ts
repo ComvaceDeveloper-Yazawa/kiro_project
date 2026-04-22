@@ -22,11 +22,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       console.log('✅ Fastify app ready');
     }
 
+    // URLパスを正規化（/api プレフィックスを削除）
+    let url = req.url || '/';
+    if (url.startsWith('/api')) {
+      url = url.substring(4) || '/';
+    }
+
     // VercelのリクエストをFastifyに変換して処理
     await app
       .inject({
         method: req.method || 'GET',
-        url: req.url || '/',
+        url: url,
         headers: req.headers as Record<string, string>,
         payload: req.body,
         query: req.query as Record<string, string>,
