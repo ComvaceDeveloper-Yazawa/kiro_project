@@ -1,5 +1,0 @@
-{
-  "buildCommand": "cd ../.. && pnpm --filter @monorepo/backend vercel-build",
-  "installCommand": "cd ../.. && pnpm install --prod=false",
-  "framework": null
-}
