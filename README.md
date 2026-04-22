@@ -57,12 +57,27 @@ AI-DLCは、AIがソフトウェア開発の各フェーズを構造的にガイ
 - ✅ Phase 7-10: Frontend完成（Composables, Stores, Components, Views, Router）
 - ✅ Phase 11: スタイリング（レスポンシブ・アクセシビリティ対応）
 - ✅ Phase 12-16: テスト・ドキュメント作成完了
-- ✅ Vercel デプロイ設定完了
+- ✅ Vercel デプロイ設定完了（モノレポ対応）
 
 ### デプロイ情報
 
 **フロントエンド**: https://kiro-project-frontend.vercel.app  
 **バックエンド**: https://kiro-project-backend-nine.vercel.app
+
+#### Vercel設定概要
+
+**フロントエンド**:
+
+- Root Directory: `packages/frontend`
+- Build Command: `pnpm build`
+- Output Directory: `dist`
+
+**バックエンド**:
+
+- Root Directory: ルート（モノレポ全体）
+- Build Command: `vercel.json`で制御
+- Install Command: `pnpm install --no-frozen-lockfile`
+- API: `/api/index.ts`経由でServerless Function化
 
 詳細なデプロイ手順は [docs/VERCEL_DEPLOYMENT.md](docs/VERCEL_DEPLOYMENT.md) を参照してください。
 
