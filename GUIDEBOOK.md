@@ -1432,8 +1432,96 @@ components にビジネスロジックを書くことは禁止されています
   - フロントエンド（3ファイル）: `ArticleForm.vue` / `ArticleEditView.vue` / `ArticleDetailView.vue`
 - **注意事項**:
   - 循環参照（A→B→A）は現在チェックしていない
-  - 次の記事は同じ著者の記事のみ選択可能
-  - 次の記事が削除された場合は自動的に `null` に設定される（ON DELETE SET NULL）
+  - 次の記事は同じ作成者の公開記事のみ選択可能
+
+**なぜ存在するか:**
+技術ブログ機能の拡張として「次に読むべき記事」機能が追加された際に、以下の目的で作成されました:
+
+1. **機能追加の記録**: 既存の技術ブログ機能に新しい機能が追加されたことを明文化し、どのような変更が行われたかを記録する
+2. **セットアップ手順の提供**: データベーススキーマ変更（マイグレーション実行）・Prismaクライアント再生成・アプリケーション再起動の手順を明確にし、開発者が迷わず機能を有効化できるようにする
+3. **使い方の説明**: エンドユーザー（記事作成者）が記事編集画面で次の記事を設定する方法・読者が記事詳細画面で次の記事に移動する方法を説明する
+4. **技術的変更の詳細**: データベーススキーマ変更（`next_article_id` カラム追加・外部キー制約・インデックス）・API変更（`CreateArticleInput` / `UpdateArticleInput` / `Article` 型の拡張）を明文化し、フロントエンド・バックエンド開発者が変更内容を理解できるようにする
+5. **実装ファイルの一覧化**: この機能追加で変更されたファイル（バックエンド6ファイル・共有1ファイル・フロントエンド3ファイル）を一覧化し、コードレビュー・テスト・デバッグの際に参照できるようにする
+
+**いつ使われるか:**
+
+- **機能追加後の初回セットアップ時**: 開発者がローカル環境で「次に読むべき記事」機能を有効化するとき（マイグレーション実行・Prismaクライアント再生成）
+- **本番環境へのデプロイ時**: 本番環境でマイグレーションを実行し、機能を有効化するとき
+- **エンドユーザーへの説明時**: 記事作成者に「次の記事を設定する方法」を説明するとき
+- **機能拡張時**: 「次に読むべき記事」機能をさらに拡張する際に、現在の実装（データベーススキーマ・API仕様・実装ファイル）を理解するため
+- **トラブルシューティング時**: 「次の記事」が表示されない・設定できないなどの問題が発生したときに、実装ファイルを特定するため
+
+**関連ファイル:**
+
+- `.kiro/specs/tech-blog/requirements.md` - 技術ブログ機能の要件定義（この機能追加の元となる要件）
+- `.kiro/specs/tech-blog/design.md` - 技術ブログ機能の設計書（この機能追加の設計根拠）
+- `packages/backend/prisma/schema.prisma` - Prismaスキーマ（`next_article_id` カラム定義）
+- `packages/backend/prisma/migrations/` - マイグレーションファイル（`next_article_id` カラム追加SQL）
+- `packages/backend/src/domain/entities/article.entity.ts` - Article エンティティ（`nextArticleId` フィールド追加）
+- `packages/backend/src/infrastructure/repositories/article.repository.impl.ts` - Article リポジトリ（`nextArticle` の取得ロジック）
+- `packages/backend/src/application/usecases/create-article.usecase.ts` - 記事作成ユースケース（`nextArticleId` の処理）
+- `packages/backend/src/application/usecases/update-article.usecase.ts` - 記事更新ユースケース（`nextArticleId` の処理）
+- `packages/shared/src/schemas/article.schema.ts` - Article スキーマ（`nextArticleId` フィールド追加）
+- `packages/frontend/src/components/ArticleForm.vue` - 記事フォームコンポーネント（次の記事選択ドロップダウン）
+- `packages/frontend/src/views/ArticleEditView.vue` - 記事編集画面（次の記事設定UI）
+- `packages/frontend/src/views/ArticleDetailView.vue` - 記事詳細画面（次の記事表示セクション）
+
+---
+
+### `VERCEL_FIX_FINAL.md`
+
+**何を定義しているか:**
+Vercelデプロイ時の500エラーを解決するための最終修正ガイドです。以下の内容が含まれます。
+
+- **実施した修正**:
+  1. `vercel.json` - 標準ビルドフローへの変更（`installCommand: pnpm install` / `buildCommand: pnpm build` / `functions` 設定で `@vercel/node@3.0.0` ランタイム指定・Prismaファイル含有）
+  2. `tsconfig.json` - 型チェック緩和（`strict: false` / `allowSyntheticDefaultImports: true`）
+  3. ルート `package.json` - buildスクリプト追加（`pnpm --filter @monorepo/backend db:generate && pnpm --filter @monorepo/backend build:api`）
+- **デプロイ手順**:
+  - Git コミット・プッシュ手順（`git add .` → `git commit -m "fix: Configure Vercel with Prisma generation"` → `git push origin main`）
+- **期待される動作**:
+  1. `pnpm install` - 依存関係インストール
+  2. `pnpm build` - Prisma Client生成
+  3. `api/index.ts` - TypeScriptビルド
+  4. `/api/health` → `{"status":"ok"}` レスポンス
+- **環境変数確認**:
+  - Vercel Dashboardで設定すべき環境変数一覧（`DATABASE_URL` / `DIRECT_URL` / `SUPABASE_URL` / `SUPABASE_ANON_KEY` / `SUPABASE_SERVICE_ROLE_KEY` / `CORS_ORIGIN` / `NODE_ENV=production`）
+  - `DATABASE_URL` の注意事項（Pooler URL + `?pgbouncer=true` パラメータ）
+  - `DIRECT_URL` の注意事項（Direct URL）
+
+**なぜ存在するか:**
+技術ブログアプリケーションをVercelにデプロイする際に500エラーが発生し、その原因がPrisma Clientの生成タイミング・TypeScriptビルド設定・Vercelのビルドフロー設定にあったため、以下の目的で作成されました:
+
+1. **修正内容の記録**: Vercelデプロイ時の500エラーを解決するために行った3つの修正（`vercel.json` / `tsconfig.json` / ルート `package.json`）を明文化し、同じ問題が再発したときに参照できるようにする
+2. **デプロイ手順の明確化**: 修正後のGitコミット・プッシュ手順を示し、開発者が迷わずデプロイできるようにする
+3. **期待される動作の明示**: Vercelのビルドフローが正しく動作したときの4つのステップ（依存関係インストール → Prisma Client生成 → TypeScriptビルド → ヘルスチェック成功）を明示し、デプロイ成功の判断基準を提供する
+4. **環境変数設定の確認リスト**: Vercel Dashboardで設定すべき7つの環境変数を一覧化し、デプロイ前に設定漏れがないか確認できるようにする
+5. **トラブルシューティングの起点**: Vercelデプロイで問題が発生したときに、まずこのファイルを参照して修正内容・環境変数設定を確認できるようにする
+
+**いつ使われるか:**
+
+- **Vercelデプロイ時**: 技術ブログアプリケーションをVercelにデプロイする際に、ビルド設定・環境変数設定を確認するとき
+- **500エラー発生時**: Vercelデプロイ後に500エラーが発生し、原因を特定するとき（Prisma Client生成・TypeScriptビルド・環境変数の確認）
+- **新規メンバーへのオンボーディング**: プロジェクトに参加した開発者がVercelデプロイの仕組みを理解するとき
+- **デプロイ設定の変更時**: `vercel.json` / `tsconfig.json` / ルート `package.json` を変更する際に、現在の設定内容を確認するとき
+- **本番環境のトラブルシューティング**: 本番環境で問題が発生し、Vercelのビルドログ・環境変数設定を確認するとき
+
+**関連ファイル:**
+
+- `vercel.json` - Vercelのビルド設定（このガイドで修正された設定ファイル）
+- `tsconfig.json` - TypeScriptコンパイラ設定（このガイドで修正された設定ファイル）
+- ルート `package.json` - モノレポのビルドスクリプト（このガイドで修正された設定ファイル）
+- `api/index.ts` - Vercel Serverless Functionsのエントリポイント
+- `packages/backend/prisma/schema.prisma` - Prismaスキーマ（Prisma Client生成の元となるファイル）
+- `docs/VERCEL_DEPLOYMENT.md` - Vercelデプロイの詳細ガイド（このガイドの補完資料）
+- `docs/VERCEL_QUICK_START.md` - Vercelデプロイのクイックスタートガイド
+- `docs/VERCEL_TROUBLESHOOTING.md` - Vercelデプロイのトラブルシューティングガイド
+- `docs/VERCEL_ENV_VARS.md` - Vercel環境変数の設定ガイド
+- `README.md` - プロジェクト全体の説明書（Vercel対応の明示）
+
+---著者の記事のみ選択可能
+
+- 次の記事が削除された場合は自動的に `null` に設定される（ON DELETE SET NULL）
 
 **なぜ存在するか:**
 技術ブログ機能（`.kiro/specs/tech-blog/`）の実装完了後、記事を連載形式で繋げる「次に読むべき記事」機能が追加実装されました。以下の目的で作成されました:
