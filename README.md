@@ -64,6 +64,8 @@ AI-DLCは、AIがソフトウェア開発の各フェーズを構造的にガイ
 **フロントエンド**: https://kiro-project-frontend.vercel.app  
 **バックエンド**: https://kiro-project-backend-nine.vercel.app
 
+> 最終更新: 2026-04-23 - Vercel Serverless Functions対応完了
+
 #### Vercel設定概要
 
 **フロントエンド**:
