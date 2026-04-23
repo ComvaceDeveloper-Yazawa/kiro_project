@@ -1,7 +1,7 @@
 {
   "version": 2,
   "framework": "vite",
-  "buildCommand": "cd ../.. && npm run build:shared && npm run build:frontend",
+  "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "installCommand": "cd ../.. && npm install --legacy-peer-deps"
+  "installCommand": "npm install --legacy-peer-deps --prefix ../.."
 }

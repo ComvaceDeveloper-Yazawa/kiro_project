@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "cd ../.. && npm run build:shared && npm run build --workspace=@monorepo/backend",
-  "installCommand": "cd ../.. && npm install --legacy-peer-deps",
+  "buildCommand": "npm run vercel-build",
+  "installCommand": "npm install --legacy-peer-deps --prefix ../..",
   "framework": null,
   "rewrites": [
     { "source": "/health", "destination": "/api/index" },
