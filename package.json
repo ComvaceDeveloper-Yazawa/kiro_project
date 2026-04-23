@@ -2,17 +2,17 @@
   "name": "kiro-project",
   "version": "0.0.1",
   "private": true,
+  "packageManager": "npm@10.9.2",
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
-    "dev": "npm run dev --workspace=@monorepo/frontend",
-    "build": "npm run build --workspace=@monorepo/shared && npm run build --workspace=@monorepo/frontend",
-    "build:shared": "npm run build --workspace=@monorepo/shared",
-    "build:frontend": "npm run build --workspace=@monorepo/frontend",
-    "build:backend": "npm run build --workspace=@monorepo/backend",
-    "test": "npm run test --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present"
+    "dev": "turbo dev --filter=@monorepo/frontend",
+    "build": "turbo build",
+    "build:frontend": "turbo build --filter=@monorepo/frontend",
+    "build:backend": "turbo build --filter=@monorepo/backend",
+    "lint": "turbo lint",
+    "test": "turbo test"
   },
   "engines": {
     "node": ">=20"
@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "prettier": "^3.3.3",
+    "turbo": "^2.9.6",
     "typescript": "^5.6.3",
     "vitest": "^2.1.9"
   }

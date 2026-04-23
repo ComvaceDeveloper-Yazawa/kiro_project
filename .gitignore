@@ -7,6 +7,17 @@ pnpm-lock.yaml
 dist/
 build/
 *.tsbuildinfo
+*.js.map
+*.d.ts
+*.d.ts.map
+# But keep config files
+!*.config.js
+!vite.config.ts
+!vitest.config.ts
+!eslint.config.js
+
+# Turborepo
+.turbo
 
 # Environment variables
 .env

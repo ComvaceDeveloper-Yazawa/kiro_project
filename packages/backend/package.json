@@ -6,11 +6,9 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "esbuild src/index.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/index.js --external:@prisma/client",
-    "build:vercel": "esbuild api/index.ts --bundle --platform=node --target=node20 --format=esm --outfile=.vercel/output/functions/api/index.func/index.js --external:@prisma/client --external:@supabase/supabase-js",
+    "build": "esbuild api/index.ts --bundle --platform=node --target=node20 --format=esm --outfile=api/index.js --external:@prisma/client --external:@supabase/supabase-js",
+    "vercel-build": "prisma generate && esbuild api/index.ts --bundle --platform=node --target=node20 --format=esm --outfile=api/index.js --external:@prisma/client --external:@supabase/supabase-js",
     "start": "node dist/index.js",
-    "vercel-build": "cd ../shared && npx tsc && cd ../backend && echo '🔍 Generating Prisma Client...' && npx prisma generate && echo '✅ Prisma Client generated' && echo '🏗️ Building API...' && npx esbuild api/index.ts --bundle --platform=node --target=node20 --format=esm --outfile=../../api/index.js --external:@prisma/client --external:@supabase/supabase-js && mkdir -p ../../public && echo 'OK' > ../../public/index.html && echo '✅ Build complete'",
-    "build:api": "esbuild api/index.ts --bundle --platform=node --target=node20 --format=esm --outfile=api/index.js --external:@prisma/client --external:@supabase/supabase-js",
     "test": "vitest --run",
     "test:watch": "vitest",
     "test:coverage": "vitest --run --coverage",
