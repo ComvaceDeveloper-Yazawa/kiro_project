@@ -15,8 +15,22 @@ import imageRoutes from '../routes/image.route.js';
  */
 const routesPlugin: FastifyPluginAsync = async (fastify) => {
   // ヘルスチェックエンドポイント（認証不要）
+  // /health と /api/health の両方で動作
   fastify.get('/health', { config: { auth: false } }, async () => ({
     status: 'ok',
+    timestamp: new Date().toISOString(),
+  }));
+
+  fastify.get('/api/health', { config: { auth: false } }, async () => ({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+  }));
+
+  // ルートパスでもヘルスチェック
+  fastify.get('/', { config: { auth: false } }, async () => ({
+    status: 'ok',
+    message: 'Tech Blog API',
+    timestamp: new Date().toISOString(),
   }));
 
   // 技術ブログ機能のルート
