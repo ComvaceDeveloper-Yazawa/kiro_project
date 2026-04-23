@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "pnpm --filter @monorepo/shared build && pnpm build",
+  "framework": "vite",
+  "buildCommand": "pnpm --filter @monorepo/shared build && pnpm --filter @monorepo/frontend build",
   "outputDirectory": "dist",
-  "installCommand": "pnpm install --prod=false",
-  "framework": "vite"
+  "installCommand": "npm install -g pnpm@10.7.1 && pnpm install --no-frozen-lockfile"
 }
