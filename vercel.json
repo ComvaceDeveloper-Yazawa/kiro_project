@@ -2,21 +2,5 @@
   "version": 2,
   "buildCommand": "cd packages/backend && pnpm vercel-build",
   "installCommand": "pnpm install --no-frozen-lockfile",
-  "outputDirectory": "packages/backend/public",
-  "framework": null,
-  "functions": {
-    "packages/backend/api/index.js": {
-      "runtime": "@vercel/node@5.7.12"
-    }
-  },
-  "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "/packages/backend/api/index"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/packages/backend/api/index"
-    }
-  ]
+  "framework": null
 }
