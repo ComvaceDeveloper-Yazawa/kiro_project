@@ -1,31 +1,21 @@
 {
-  "name": "monorepo",
-  "version": "0.1.0",
+  "name": "kiro-project",
+  "version": "0.0.1",
   "private": true,
-  "packageManager": "pnpm@10.4.1",
-  "engines": {
-    "node": ">=20",
-    "pnpm": ">=10"
-  },
-  "pnpm": {
-    "overrides": {
-      "esbuild": "^0.24.0"
-    }
-  },
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "dev:backend": "pnpm --filter @monorepo/backend dev",
-    "dev:frontend": "pnpm --filter @monorepo/frontend dev",
-    "build": "pnpm --filter @monorepo/backend db:generate && pnpm --filter @monorepo/backend build:api",
-    "vercel-build": "pnpm --filter @monorepo/backend vercel-build",
-    "build:frontend": "pnpm --filter @monorepo/shared build && pnpm --filter @monorepo/frontend build",
-    "test": "pnpm --filter @monorepo/shared test && pnpm --filter @monorepo/backend test && pnpm --filter @monorepo/frontend test",
-    "test:all": "vitest --workspace vitest.workspace.ts --run",
-    "test:coverage": "vitest --workspace vitest.workspace.ts --run --coverage",
-    "test:e2e": "pnpm --filter @monorepo/e2e test",
-    "lint": "pnpm --filter @monorepo/shared lint && pnpm --filter @monorepo/backend lint && pnpm --filter @monorepo/frontend lint",
-    "format": "pnpm --filter @monorepo/shared format && pnpm --filter @monorepo/backend format && pnpm --filter @monorepo/frontend format",
-    "db:migrate": "pnpm --filter @monorepo/backend db:migrate",
-    "db:generate": "pnpm --filter @monorepo/backend db:generate"
+    "dev": "npm run dev --workspace=@monorepo/frontend",
+    "build": "npm run build --workspace=@monorepo/shared && npm run build --workspace=@monorepo/frontend",
+    "build:shared": "npm run build --workspace=@monorepo/shared",
+    "build:frontend": "npm run build --workspace=@monorepo/frontend",
+    "build:backend": "npm run build --workspace=@monorepo/backend",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "dependencies": {
     "@vercel/node": "^5.7.12"

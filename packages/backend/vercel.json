@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "pnpm vercel-build",
-  "installCommand": "corepack enable && corepack prepare pnpm@10.4.1 --activate && pnpm install --no-frozen-lockfile",
+  "buildCommand": "cd ../.. && npm run build:shared && npm run build --workspace=@monorepo/backend",
+  "installCommand": "cd ../.. && npm install --legacy-peer-deps",
   "framework": null,
   "rewrites": [
     { "source": "/health", "destination": "/api/index" },

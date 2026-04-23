@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@heroicons/vue": "^2.2.0",
-    "@monorepo/shared": "workspace:*",
+    "@monorepo/shared": "*",
     "@supabase/supabase-js": "^2.45.4",
     "isomorphic-dompurify": "^3.9.0",
     "marked": "^18.0.2",
