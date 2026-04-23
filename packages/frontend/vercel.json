@@ -3,5 +3,5 @@
   "framework": "vite",
   "buildCommand": "pnpm --filter @monorepo/shared build && pnpm --filter @monorepo/frontend build",
   "outputDirectory": "dist",
-  "installCommand": "corepack enable && corepack prepare pnpm@9.15.9 --activate && pnpm install --no-frozen-lockfile --registry=https://registry.npmjs.org/"
+  "installCommand": "corepack enable && corepack prepare pnpm@10.4.1 --activate && pnpm install --no-frozen-lockfile"
 }
