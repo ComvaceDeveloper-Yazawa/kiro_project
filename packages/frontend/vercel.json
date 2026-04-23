@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "buildCommand": "pnpm --filter @monorepo/shared build && pnpm build",
+  "outputDirectory": "dist",
+  "installCommand": "pnpm install --prod=false",
+  "framework": "vite"
+}

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "cd packages/backend && pnpm vercel-build",
+  "buildCommand": "pnpm vercel-build",
   "installCommand": "pnpm install --no-frozen-lockfile",
   "framework": null,
   "rewrites": [
