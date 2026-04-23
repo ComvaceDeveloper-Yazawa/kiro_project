@@ -20,8 +20,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       console.log('✅ Fastify app ready');
     }
 
-    // URLパスを正規化（/api プレフィックスを削除）
-    const url = req.url!.replace(/^\/api/, '') || '/';
+    // URLをそのまま使用 (Fastifyルートは /api/* で定義されているため)
+    const url = req.url || '/';
 
     // VercelのリクエストをFastifyに変換して処理
     const response = await app.inject({

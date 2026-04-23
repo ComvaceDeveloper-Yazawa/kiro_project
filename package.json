@@ -16,7 +16,7 @@
     "dev:backend": "pnpm --filter @monorepo/backend dev",
     "dev:frontend": "pnpm --filter @monorepo/frontend dev",
     "build": "pnpm --filter @monorepo/backend db:generate && pnpm --filter @monorepo/backend build:api",
-    "vercel-build": "pnpm --filter @monorepo/backend db:generate",
+    "vercel-build": "pnpm --filter @monorepo/backend vercel-build",
     "build:frontend": "pnpm --filter @monorepo/shared build && pnpm --filter @monorepo/frontend build",
     "test": "pnpm --filter @monorepo/shared test && pnpm --filter @monorepo/backend test && pnpm --filter @monorepo/frontend test",
     "test:all": "vitest --workspace vitest.workspace.ts --run",
