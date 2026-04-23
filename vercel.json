@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build:shared && npm run build:frontend",
+  "outputDirectory": "packages/frontend/dist",
+  "installCommand": "npm install --legacy-peer-deps"
+}
