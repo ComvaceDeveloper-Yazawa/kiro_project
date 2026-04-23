@@ -1,7 +1,6 @@
 {
   "version": 2,
   "buildCommand": "npm run vercel-build",
-  "installCommand": "npm install --legacy-peer-deps --prefix ../..",
   "framework": null,
   "rewrites": [
     { "source": "/health", "destination": "/api/index" },

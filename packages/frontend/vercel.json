@@ -2,6 +2,5 @@
   "version": 2,
   "framework": "vite",
   "buildCommand": "npm run vercel-build",
-  "outputDirectory": "dist",
-  "installCommand": "cd ../.. && rm -rf node_modules packages/*/node_modules && npm install --legacy-peer-deps"
+  "outputDirectory": "dist"
 }
