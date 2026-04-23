@@ -9,7 +9,7 @@
     "build": "esbuild src/index.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/index.js --external:@prisma/client",
     "build:vercel": "esbuild api/index.ts --bundle --platform=node --target=node20 --format=esm --outfile=.vercel/output/functions/api/index.func/index.js --external:@prisma/client --external:@supabase/supabase-js",
     "start": "node dist/index.js",
-    "vercel-build": "pnpm exec prisma generate && esbuild api/index.ts --bundle --platform=node --target=node20 --format=esm --outfile=api/index.js --external:@prisma/client --external:@supabase/supabase-js",
+    "vercel-build": "echo '🔍 Generating Prisma Client...' && pnpm exec prisma generate && echo '✅ Prisma Client generated' && echo '🏗️ Building API...' && esbuild api/index.ts --bundle --platform=node --target=node20 --format=esm --outfile=api/index.js --external:@prisma/client --external:@supabase/supabase-js && echo '✅ Build complete'",
     "build:api": "esbuild api/index.ts --bundle --platform=node --target=node20 --format=esm --outfile=api/index.js --external:@prisma/client --external:@supabase/supabase-js",
     "test": "vitest --run",
     "test:watch": "vitest",
